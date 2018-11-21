@@ -1,5 +1,6 @@
 # Sieci neuronowe
 MLP + Najszybszy spadek z bezwładnością
+
 Napisać pakiet umożliwiający trenowanie perceptronów wielowarstwowych przy użyciu metody najszybszego spadku z bezwładnością. Rozwiązanie przetestować na zadaniu: 
 [Dane](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic).)
 
