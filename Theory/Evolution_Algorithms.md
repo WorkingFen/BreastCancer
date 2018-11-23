@@ -40,7 +40,7 @@ Reprodukcja przebiega za pomocą _krzyżowania_, a także _mutacji_.
 3. Wybierz z sumy zbiorów **P** i **R** nową populację **P**
 4. Jeśli nie jest spełniony warunek stop, wróć do punktu 2, w przeciwnym razie zwróć najlepszego osobnika z **P**
 
-# [Algorytm (1+1)](issues/3) 
+# [Algorytm (1+1)](https://github.com/WorkingFen/PSZTProject/issues/3) 
 
 ```
 Nasze parametry:
@@ -78,5 +78,5 @@ Nasze parametry:
    dopóki nie wystąpił warunek stop
 3. Zwróć _xr_
 
-# [Algorytm (Mi + La)](issues/4)
+# [Algorytm (Mi + La)](https://github.com/WorkingFen/PSZTProject/issues/4)
 
