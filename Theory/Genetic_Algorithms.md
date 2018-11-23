@@ -14,13 +14,13 @@ Algorytmy genetyczne różnią się od ewolucyjnych faktem, że to nie osobniki 
   - _locus_ -> pozycja w genotypie
   - _chromosom_ -> zgrupowanie pozycji, na których geny kodują jakąś niezależną cechę fenotypu
 
-## Ogólny algorytm genetyczny
+## [Ogólny algorytm genetyczny](https://github.com/WorkingFen/PSZTProject/issues/7)
 
 1. Wygeneruj populację początkową genotypów **P**
    > Tak jak dla przykładu z muzyką, będą to stworzone przez człowieka utwory
 2. Reprodukuj z par z **P** zbiór genotypów **R** przez zastosowanie krzyżowania a potem mutacji
 3. Wybierz z sumy zbiorów **P** i **R** nową populację **P** tworząc z każdego genotypu osobnika i oceniając go
-4. Jeśli nie jest spełniony warunek stopu, wróć do punktu 2, w przeciwnym razie zwróć najlepszy fenotyp dla osobnika
+4. Jeśli nie jest spełniony warunek stopu, wróć do punktu 2, w przeciwnym razie zwróć najlepszy fenotyp dla osobnika ze zbioru **P**
 
 #### Krzyżowanie
 
