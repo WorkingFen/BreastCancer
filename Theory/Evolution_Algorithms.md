@@ -23,11 +23,13 @@ Jest kilka podejść do takiej optymalizacji.
 
 # Idea algorytmów ewolucyjnych
 
-Najmniejszym element rozważań jest osobnik, którego większa ilość tworzy populację. Tak jak to ma miejsce z kolonią mrówek.
+Najmniejszym elementem rozważań jest osobnik, którego większa ilość tworzy populację. Tak jak to ma miejsce z kolonią mrówek.
 
 Osobniki te jak żywe organizmy potrafią się reprodukować i wydawać nowe, **odmienne** potomstwo.
 > Na tym polega w sumie działanie algorytmów ewolucyjnych
+
 Reprodukcja przebiega za pomocą _krzyżowania_, a także _mutacji_.
+
 > Maksymalizowana przez nas funkcja f, będzie określana funkcją przystosowania osobników
 
 ### Ogólny algorytm ewolucyjny
@@ -42,10 +44,10 @@ Reprodukcja przebiega za pomocą _krzyżowania_, a także _mutacji_.
 
 ```
 Nasze parametry:
-- _n_ -> wymiar X
+- n -> wymiar X
   - dla przykładu: dla n=2 -> x należący do X = <a,b>
   - dla n=3 -> x należący do X = <a,b,c> itd.
-- _m_ -> ilość iteracji po której krok szumu mutuje
+- m -> ilość iteracji po której krok szumu mutuje
 - d -> początkowy czynnik szumu, który musi spełniać warunek d>0
 ```
 
@@ -57,9 +59,9 @@ Nasze parametry:
 5. Co _m_-ty krok dokonaj mutacji:
 
    ```
-   d = _c1_d dla _Fi_ < 1/5
-       _c2_d dla _Fi_ > 1/5
-         d   dla _Fi_ = 1/5
+   d = c1d dla Fi < 1/5
+       c2d dla Fi > 1/5
+       d   dla Fi = 1/5
    ```
 6. Jeśli d < d*min*, zakończ przyjmując _x_ jako wynik; w przeciwnym razie wróć do punktu 2.
 
