@@ -2,6 +2,7 @@
 #include <vector>
 #include <algorithm>
 #include <chrono>
+#include <thread>
 #include <math.h>
 
 using namespace std;
@@ -45,8 +46,8 @@ class neuron{
         numberOfInputs=1;
         input.resize(1, 1.0);
 
-        std::default_random_engine rand_num{static_cast<long unsigned int>(std::chrono::high_resolution_clock::now().time_since_epoch().count())};
-        std::uniform_real_distribution<float> dis(-0.18, 0.18);                          // ∼U (−1/√dim(we),1/√dim(we)) - około (-0,18;0,18)
+        default_random_engine rand_num{static_cast<long unsigned int>(std::chrono::high_resolution_clock::now().time_since_epoch().count())};
+        uniform_real_distribution<float> dis(-0.18, 0.18);                          // ∼U (−1/√dim(we),1/√dim(we)) - około (-0,18;0,18)
         weight.resize(1, dis(rand_num));                                              
     }
 
@@ -58,8 +59,9 @@ class neuron{
         input[numberOfInputs]=1;
         weight.resize(this->numberOfInputs);
 
-        std::default_random_engine rand_num{static_cast<long unsigned int>(std::chrono::high_resolution_clock::now().time_since_epoch().count())};
-        std::uniform_real_distribution<float> dis(-0.18, 0.18);                    // ∼U (−1/√dim(we),1/√dim(we)) - około (-0,18;0,18)
+        default_random_engine rand_num{static_cast<long unsigned int>(chrono::high_resolution_clock::now().time_since_epoch().count())};
+        this_thread::sleep_for (chrono::milliseconds(1));                     // potrzebne krótkie oczekiwanie, aby seed był inny przy tworzeniu wielu neuronów w krótkim odstępie czasowym
+        uniform_real_distribution<float> dis(-0.18, 0.18);                    // ∼U (−1/√dim(we),1/√dim(we)) - około (-0,18;0,18)
 
         for(int i=0;i<this->numberOfInputs;i++)
             weight[i]=dis(rand_num);
