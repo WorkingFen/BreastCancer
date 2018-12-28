@@ -11,8 +11,9 @@ int main()
     x.setInput(0,3);
     x.setInput(1,3);
     x.setInput(2,3);
-
-    cout << x.processData() << endl;
+    x.processData();
+    cout << x;
+    cout << endl;
 
     return 0;
 }

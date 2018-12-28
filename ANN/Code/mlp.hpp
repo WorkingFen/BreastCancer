@@ -10,6 +10,7 @@ using namespace std;
 class mlp{
     vector<int> layerInputs;                                                                                   // wektor przechowujący informację o liczbie wejść do neuronów w każdej z powłok
     vector<vector<neuron>> neurons;
+    vector<double> networkOutput;
 
     public:
     /*
@@ -45,25 +46,41 @@ class mlp{
             neurons[0][i].setInput(inputNumber, value);
     }
 
-    double processData()
+    /*
+    Metoda symulująca przepływ danych przez perceptron.
+    */
+    void processData()
     {
         double output;
         int end=layerInputs.size();
+        vector<double> outputVector;
         for(int i=1;i<end;i++)                                                                              // "przejście" przez sieć
         {
             for(int j=0;j<layerInputs[i];j++)
             {
                 output=neurons[i-1][j].getOutput();
-                if(i==(end-1))
+                if(i!=(end-1))
                 {
                     for(int z=0;z<layerInputs[i+1];z++)                                                    // przekazanie wyjścia danego neuronu do neuronów następnej warstwy
                         neurons[i][z].setInput(j, output);
                 }
+                else
+                    outputVector.push_back(output);
             }
         }
-        return output;
+        networkOutput.assign(outputVector.begin(), outputVector.end());
         // funkcja wyjścia -> metoda private
         // wsteczna propagacja, zmiana wag -> metoda private
     }
 
+    vector<double> getOutputVector()
+    {
+        return networkOutput;
+    }
+
+    friend ostream &operator<<( ostream &output, const mlp &network )
+    {
+        for(double i: network.networkOutput)
+            output << i << " ";
+    }         
 };
