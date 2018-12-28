@@ -9,7 +9,7 @@ Zanim zaczniemy cokolwiek pobierać, to najpierw musimy cokolwiek zrobić.
 ### Wymagania wstępne
 Wykonanie choć dokumentacji z naszej strony, więc chwilowo nie ma nic
 ### Kompilacja
-g++ -std=c++11 Headers/neuron.hpp Headers/mlp.hpp main.cpp -o pszt
+g++ -std=c++11 neuron.hpp mlp.hpp main.cpp -o pszt
  
 ## Technologie
 Jeszcze nie mamy bladego pojęcia, co i jak musimy zrobić
