@@ -12,6 +12,17 @@ class mlp{
     vector<vector<neuron>> neurons;
     vector<double> networkOutput;
 
+     /*
+    outputValue - wartość na wyjściu sieci (wyjście może być wektorem, więc może istnieć konieczność wywołania tej metody dla każdego elementu wektora wyjść sieci)
+    expectedOutputValue - oczekiwana wartość wyjścia
+    inputNumber - numer wejścia neuronu (liczone od 0)
+    */
+    double countOuterError(double outputValue, double expectedOutputValue, int inputNumber)
+    {
+        int layer=layerInputs.size()-2;
+        return (outputValue-expectedOutputValue)*neurons[layer-1][inputNumber].getOutput();
+    }
+
     public:
     /*
     numberOfParameters - informacja o liczbie parametrów wejściowych
@@ -69,6 +80,7 @@ class mlp{
             }
         }
         networkOutput.assign(outputVector.begin(), outputVector.end());
+
         // funkcja wyjścia -> metoda private
         // wsteczna propagacja, zmiana wag -> metoda private
     }
