@@ -42,6 +42,7 @@ class neuron{
     public:
     neuron()
     {
+        output=0;
         type=0;
         numberOfInputs=1;
         input.resize(1, 1.0);
@@ -53,6 +54,7 @@ class neuron{
 
     neuron(int type, int numberOfInputs)
     {
+        output=0;
         this->type=type;
         this->numberOfInputs=numberOfInputs+1;
         input.resize(this->numberOfInputs, 0.0);
@@ -95,8 +97,14 @@ class neuron{
     /*
     Wyjście neuronu po przetworzeniu wejść w sumatorze i po zastosowaniu funkcji aktywacyjnej.
     */
+    double getNewOutput()
+    {
+        output=applyFunction();
+        return output;
+    }
+
     double getOutput()
     {
-        return applyFunction();
+        return output;
     }
 };

@@ -58,7 +58,7 @@ class mlp{
         {
             for(int j=0;j<layerInputs[i];j++)
             {
-                output=neurons[i-1][j].getOutput();
+                output=neurons[i-1][j].getNewOutput();
                 if(i!=(end-1))
                 {
                     for(int z=0;z<layerInputs[i+1];z++)                                                    // przekazanie wyjścia danego neuronu do neuronów następnej warstwy
