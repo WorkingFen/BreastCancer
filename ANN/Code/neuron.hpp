@@ -87,6 +87,11 @@ class neuron{
         weight[inputNumber]=value;
     }
 
+    vector<double> getWeightVector()
+    {
+        return weight;
+    } 
+
     /*
     Wyjście neuronu po przetworzeniu wejść w sumatorze i po zastosowaniu funkcji aktywacyjnej.
     */
