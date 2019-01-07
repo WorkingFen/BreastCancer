@@ -46,14 +46,12 @@ class mlp{
 
         double sum = 0;                                         // suma error * waga
 
-        //vector<double> weightVector = neurons[layer+1][inputNumber].getWeightVector(); 
-
         vector<double> weightVector;
-        for(int i=0;i<layerInputs[layer+2];i++)
+        for(int i=0;i<layerInputs[layer+1];i++)
         {
-            weightVector.push_back(neurons[layer+1][i].getWeightVector()[inputNumber]);
+            weightVector.push_back(neurons[layer][i].getWeightVector()[inputNumber]);
         }
-
+        
         double weight;
         for(int i = 0; i < neurons[layer].size(); i++)
         {
@@ -82,17 +80,15 @@ class mlp{
                 vector<double> errors;
                 for(int x=0;x<layerInputs[z+1];x++)                                                                                            // przygotowanie wektora errors
                 {
-                    cout << z << " " << i << " " << startingIndex+i+(x*layerInputs[z]) << endl;
-
                     errors.push_back(error[startingIndex+i+(x*layerInputs[z])]);                                                               // layerInputs[z]-offset, i-stride
                 }
-                cout << endl;
+
                 for(int j=0;j<layerInputs[z-1];j++)
                 {
                     if(z>1)
-                        error.push_back(countInnerError(errors,z-1,j,neurons[z-2][j].getOutput()));
+                        error.push_back(countInnerError(errors,z,j,neurons[z-2][j].getOutput()));
                     else
-                        error.push_back(countInnerError(errors,z,j,neurons[z-1][j].getInput(j)));                                              // liczenie błędów dla wejść sieci
+                        error.push_back(countInnerError(errors,z,j,neurons[z-1][0].getInput(j)));                                              // liczenie błędów dla wejść sieci (wejście nie zależy od numeru neuronu -> dla każdego takie samo)
                 }
             }
             startingIndex+=layerInputs[z+1]*layerInputs[z];

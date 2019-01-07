@@ -6,7 +6,7 @@ using namespace std;
 
 int main()
 {
-    mlp x(3, {3, 2, 1});
+    mlp x(3, {2, 1});
 
     x.setInput(0,3);
     x.setInput(1,3);
