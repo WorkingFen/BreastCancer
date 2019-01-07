@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <chrono>
 #include <math.h>
+#include <random>
 #include "neuron.hpp"
 
 using namespace std;
@@ -21,6 +22,37 @@ class mlp{
     {
         int layer=layerInputs.size()-2;
         return (outputValue-expectedOutputValue)*neurons[layer-1][inputNumber].getOutput();
+    }
+
+    /*
+    layer - numer warstwy w której jesteśmy (k)
+    errors - wektor błędów z k+1-szej warstwy
+    inputNumber - numer wejścia neuronu (liczone od 0)
+
+    zapewne zrobimy macierz errors w klasie i nie będzie ona potrzebna tutaj w parametrach
+    ale już taki layer raczej musi być przekazany w parametrze, chociaż mogę się mylić
+
+    */
+
+    double countInnerError(vector<double> errors, int layer, int inputNumber)
+    {
+        double y = neurons[layer-1][inputNumber].getOutput(); // wyjście j-tego neuronu warstwy k-1
+
+        double s = neurons[layer-1][inputNumber].sum(); // suma obliczana przez i-ty neuron k-tej warstwy
+        double derivative = exp(s)/ pow(1 + exp(s), 2);
+
+        double sum = 0; // suma error * waga
+        vector<double> weightVector = neurons[layer+1][inputNumber].getWeightVector(); 
+        
+
+        double weight;
+        for(int i = 0; i < neurons[layer].size(); i++)
+        {
+            weight = weightVector[i];
+            sum += weight * errors[i]/neurons[layer][inputNumber].getOutput();
+        }
+
+        return derivative * y * sum;
     }
 
     public:

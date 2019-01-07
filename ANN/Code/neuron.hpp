@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <chrono>
 #include <thread>
+#include <random>
 #include <math.h>
 
 using namespace std;
@@ -13,17 +14,7 @@ class neuron{
     double output;
     int type, numberOfInputs;                                       // type==0 to neuron liniowy; type==1 to neuron sigmoidalny
 
-    /*
-    Sumator
-    */
-    double sum()
-    {
-        double x=0;
-        for(int i=0;i<numberOfInputs;i++)
-             x+=input[i]*weight[i];
 
-        return x;
-    }
 
     /*
     Funkcja aktywacyjna
@@ -70,6 +61,20 @@ class neuron{
     }
 
     ~neuron(){};
+
+
+    /*
+    Sumator
+    */
+    double sum()
+    {
+        double x=0;
+        for(int i=0;i<numberOfInputs;i++)
+             x+=input[i]*weight[i];
+
+        return x;
+    }
+
 
     /*
     Zwraca liczbę "edytowalnych" wejść -> ostatnie wejście ma wartość 1.
