@@ -168,24 +168,7 @@ class mlp{
 
     void processDataAndLearn()
     {
-        double output;
-        int end=layerInputs.size();
-        vector<double> outputVector;
-        for(int i=1;i<end;i++)                                                                              // "przejście" przez sieć
-        {
-            for(int j=0;j<layerInputs[i];j++)
-            {
-                output=neurons[i-1][j].getNewOutput();
-                if(i!=(end-1))
-                {
-                    for(int z=0;z<layerInputs[i+1];z++)                                                    // przekazanie wyjścia danego neuronu do neuronów następnej warstwy
-                        neurons[i][z].setInput(j, output);
-                }
-                else
-                    outputVector.push_back(output);
-            }
-        }
-        networkOutput.assign(outputVector.begin(), outputVector.end());
+        processData();
         propagateBackwards();
         // funkcja wyjścia -> metoda private
         // wsteczna propagacja, zmiana wag -> metoda private
