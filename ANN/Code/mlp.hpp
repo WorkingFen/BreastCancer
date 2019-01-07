@@ -12,6 +12,8 @@ class mlp{
     vector<int> layerInputs;                                                                                   // wektor przechowujący informację o liczbie wejść do neuronów w każdej z powłok
     vector<vector<neuron>> neurons;
     vector<double> networkOutput;
+    vector<double> expectedNetworkOutput;
+    vector<double> error;
 
      /*
     outputValue - wartość na wyjściu sieci (wyjście może być wektorem, więc może istnieć konieczność wywołania tej metody dla każdego elementu wektora wyjść sieci)
@@ -34,16 +36,23 @@ class mlp{
 
     */
 
-    double countInnerError(vector<double> errors, int layer, int inputNumber)
+    double countInnerError(vector<double> errors, int layer, int inputNumber, double input)
     {
-        double y = neurons[layer-1][inputNumber].getOutput(); // wyjście j-tego neuronu warstwy k-1
+        //double y = neurons[layer-1][inputNumber].getOutput(); // wyjście j-tego neuronu warstwy k-1
+        //double s = neurons[layer][inputNumber].getSum();        // suma obliczana przez i-ty neuron k-tej warstwy
 
-        double s = neurons[layer-1][inputNumber].sum(); // suma obliczana przez i-ty neuron k-tej warstwy
+        double s = neurons[layer-1][inputNumber].getSum();    // suma obliczana przez i-ty neuron k-tej warstwy
         double derivative = exp(s)/ pow(1 + exp(s), 2);
 
-        double sum = 0; // suma error * waga
-        vector<double> weightVector = neurons[layer+1][inputNumber].getWeightVector(); 
-        
+        double sum = 0;                                         // suma error * waga
+
+        //vector<double> weightVector = neurons[layer+1][inputNumber].getWeightVector(); 
+
+        vector<double> weightVector;
+        for(int i=0;i<layerInputs[layer+2];i++)
+        {
+            weightVector.push_back(neurons[layer+1][i].getWeightVector()[inputNumber]);
+        }
 
         double weight;
         for(int i = 0; i < neurons[layer].size(); i++)
@@ -52,7 +61,42 @@ class mlp{
             sum += weight * errors[i]/neurons[layer][inputNumber].getOutput();
         }
 
-        return derivative * y * sum;
+        return derivative * input * sum;
+    }
+
+    void propagateBackwards()
+    {
+        int startingIndex=0;
+        int layer=layerInputs.size()-2;
+
+        for(int i=0;i<layerInputs[layer+1];i++)                                                                                                 // propagacja po neuronach warstwy wyjściowej
+        {
+            for(int j=0;j<layerInputs[layer];j++)
+                error.push_back(countOuterError(networkOutput[i],expectedNetworkOutput[i],j));
+        }
+
+        for(int z=layer;z>0;z--)                                                                                                               // propagacja po neuronach warstw ukrytych
+        {
+            for(int i=0;i<layerInputs[z];i++)                                                                                                 
+            {
+                vector<double> errors;
+                for(int x=0;x<layerInputs[z+1];x++)                                                                                            // przygotowanie wektora errors
+                {
+                    cout << z << " " << i << " " << startingIndex+i+(x*layerInputs[z]) << endl;
+
+                    errors.push_back(error[startingIndex+i+(x*layerInputs[z])]);                                                               // layerInputs[z]-offset, i-stride
+                }
+                cout << endl;
+                for(int j=0;j<layerInputs[z-1];j++)
+                {
+                    if(z>1)
+                        error.push_back(countInnerError(errors,z-1,j,neurons[z-2][j].getOutput()));
+                    else
+                        error.push_back(countInnerError(errors,z,j,neurons[z-1][j].getInput(j)));                                              // liczenie błędów dla wejść sieci
+                }
+            }
+            startingIndex+=layerInputs[z+1]*layerInputs[z];
+        }                                                                                       
     }
 
     public:
@@ -76,6 +120,9 @@ class mlp{
 
         for(int i=0;i<layer.back();i++)
             neurons[j].push_back(neuron(0,layerInputs[j]));                                                   // stworzenie neuronów (liniowych) warstwy wyjściowej
+        
+        vector<double> out (layer.back());
+        expectedNetworkOutput=out;
     }
 
     ~mlp(){};
@@ -87,6 +134,11 @@ class mlp{
     {
         for(int i=0;i<layerInputs[1];i++)
             neurons[0][i].setInput(inputNumber, value);
+    }
+
+    void setExpectedOutput(int outputNumber, double value)
+    {
+        expectedNetworkOutput[outputNumber]=value;
     }
 
     /*
@@ -112,7 +164,29 @@ class mlp{
             }
         }
         networkOutput.assign(outputVector.begin(), outputVector.end());
+    }
 
+    void processDataAndLearn()
+    {
+        double output;
+        int end=layerInputs.size();
+        vector<double> outputVector;
+        for(int i=1;i<end;i++)                                                                              // "przejście" przez sieć
+        {
+            for(int j=0;j<layerInputs[i];j++)
+            {
+                output=neurons[i-1][j].getNewOutput();
+                if(i!=(end-1))
+                {
+                    for(int z=0;z<layerInputs[i+1];z++)                                                    // przekazanie wyjścia danego neuronu do neuronów następnej warstwy
+                        neurons[i][z].setInput(j, output);
+                }
+                else
+                    outputVector.push_back(output);
+            }
+        }
+        networkOutput.assign(outputVector.begin(), outputVector.end());
+        propagateBackwards();
         // funkcja wyjścia -> metoda private
         // wsteczna propagacja, zmiana wag -> metoda private
     }

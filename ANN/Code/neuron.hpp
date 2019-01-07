@@ -11,10 +11,21 @@ using namespace std;
 class neuron{
     vector<double> input;                                           // wektor wejść
     vector<double> weight;                                          // wektor wag
-    double output;
+    double output, sumValue;
     int type, numberOfInputs;                                       // type==0 to neuron liniowy; type==1 to neuron sigmoidalny
 
+    /*
+    Sumator
+    */
+    double sum()
+    {
+        double x=0;
+        for(int i=0;i<numberOfInputs;i++)
+             x+=input[i]*weight[i];
 
+        sumValue=x;
+        return x;
+    }
 
     /*
     Funkcja aktywacyjna
@@ -34,6 +45,7 @@ class neuron{
     neuron()
     {
         output=0;
+        sumValue=0;
         type=0;
         numberOfInputs=1;
         input.resize(1, 1.0);
@@ -46,6 +58,7 @@ class neuron{
     neuron(int type, int numberOfInputs)
     {
         output=0;
+        sumValue=0;
         this->type=type;
         this->numberOfInputs=numberOfInputs+1;
         input.resize(this->numberOfInputs, 0.0);
@@ -61,20 +74,6 @@ class neuron{
     }
 
     ~neuron(){};
-
-
-    /*
-    Sumator
-    */
-    double sum()
-    {
-        double x=0;
-        for(int i=0;i<numberOfInputs;i++)
-             x+=input[i]*weight[i];
-
-        return x;
-    }
-
 
     /*
     Zwraca liczbę "edytowalnych" wejść -> ostatnie wejście ma wartość 1.
@@ -108,8 +107,18 @@ class neuron{
         return output;
     }
 
+    double getInput(int inputNumber)
+    {
+        return input[inputNumber];
+    }
+
     double getOutput()
     {
         return output;
+    }
+
+    double getSum()
+    {
+        return sumValue;
     }
 };

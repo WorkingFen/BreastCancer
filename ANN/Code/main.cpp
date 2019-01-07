@@ -11,7 +11,7 @@ int main()
     x.setInput(0,3);
     x.setInput(1,3);
     x.setInput(2,3);
-    x.processData();
+    x.processDataAndLearn();
     cout << x;
     cout << endl;
 
