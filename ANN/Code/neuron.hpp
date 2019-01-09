@@ -83,17 +83,27 @@ class neuron{
         return numberOfInputs-1;
     }
 
+     /*
+    Ustawia wartość na danym wejściu neuronu.
+    */
     void setInput(int inputNumber, double value)
     {
         input[inputNumber]=value;
     }
 
+     /*
+    Ustawia wagę na danym wejściu neuronu.
+    */
     void setWeight(int inputNumber, double value)
     {
         weight[inputNumber]=value;
     }
 
-    vector<double> getWeightVector()
+    
+    /*
+    Zwraca referencję do wektora wag.
+    */
+    vector<double>& getWeightVector()
     {
         return weight;
     } 
@@ -107,16 +117,25 @@ class neuron{
         return output;
     }
 
+    /*
+    Zwraca wartość znajdującą się na danym wejściu neuronu.
+    */
     double getInput(int inputNumber)
     {
         return input[inputNumber];
     }
 
+    /*
+    Zwraca wartość znajdującą się na wyjściu neuronu (bez dokonywania żadnych dodatkowych operacji).
+    */
     double getOutput()
     {
         return output;
     }
 
+    /*
+    Zwraca sumę ważoną wejść danego neuronu.
+    */
     double getSum()
     {
         return sumValue;

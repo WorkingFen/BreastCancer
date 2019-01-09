@@ -9,11 +9,13 @@
 using namespace std;
 
 class mlp{
-    vector<int> layerInputs;                                                                                   // wektor przechowujący informację o liczbie wejść do neuronów w każdej z powłok
+    vector<int> layerInputs;                                      // wektor przechowujący informację o liczbie wejść do neuronów w każdej z warstw; elementy wektora o indeksach od 1 wzwyż można też traktować jako liczbę neuronów w danej warstwie sieci
     vector<vector<neuron>> neurons;
     vector<double> networkOutput;
     vector<double> expectedNetworkOutput;
-    vector<double> error;
+    vector<double> error;                                        // wektor kolumnowy przechowujący dq/d(theta)
+    vector<double> columnWeightVector;                           // wektor kolumnowy przechowujący wagi wejść neuronów wchodzących w skład sieci
+
 
      /*
     outputValue - wartość na wyjściu sieci (wyjście może być wektorem, więc może istnieć konieczność wywołania tej metody dla każdego elementu wektora wyjść sieci)
@@ -62,6 +64,9 @@ class mlp{
         return derivative * input * sum;
     }
 
+     /*
+    Metoda wykonująca propagację wsteczną. Wypełnia przy tym wektory kolumnowe wag i dq/d(theta).
+    */
     void propagateBackwards()
     {
         int startingIndex=0;
@@ -77,10 +82,13 @@ class mlp{
         {
             for(int i=0;i<layerInputs[z];i++)                                                                                                 
             {
+                vector<double> weight = neurons[z-1][i].getWeightVector();                                                                    // tworzenie wektora kolumnowego wag                                                                     
+                columnWeightVector.insert(end(columnWeightVector), begin(weight), end(weight));
+
                 vector<double> errors;
                 for(int x=0;x<layerInputs[z+1];x++)                                                                                            // przygotowanie wektora errors
                 {
-                    errors.push_back(error[startingIndex+i+(x*layerInputs[z])]);                                                               // layerInputs[z]-offset, i-stride
+                    errors.push_back(error[startingIndex+i+(x*layerInputs[z])]);                                                               // layerInputs[z]->offset, i->stride
                 }
 
                 for(int j=0;j<layerInputs[z-1];j++)
@@ -162,14 +170,20 @@ class mlp{
         networkOutput.assign(outputVector.begin(), outputVector.end());
     }
 
+    /*
+    Metoda symulująca przepływ danych przez perceptron i naukę (przykład po przykładzie).
+    */
     void processDataAndLearn()
     {
+        //pętla
         processData();
         propagateBackwards();
-        // funkcja wyjścia -> metoda private
-        // wsteczna propagacja, zmiana wag -> metoda private
+        //pętla
     }
 
+    /*
+    Zwraca wektor wyjść danej sieci neuronowej.
+    */
     vector<double> getOutputVector()
     {
         return networkOutput;
