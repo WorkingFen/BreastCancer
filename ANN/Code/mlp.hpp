@@ -131,6 +131,7 @@ class mlp{
     {
         for(int i=0;i<networkOutput.size();i++)
         {
+            cout << abs(networkOutput[i]-expectedNetworkOutput[i]) / expectedNetworkOutput[i] << endl;
             if(abs(networkOutput[i]-expectedNetworkOutput[i]) / expectedNetworkOutput[i] > epsilon)
                 return false;
         }
@@ -259,12 +260,13 @@ class mlp{
     void processDataAndLearn()
     {
         print_weights();cout<<endl;
+        int i=1;
 
         while(!precisionReached(0.1))
         {
             processData();
             propagateBackwards();
-            sochasticDescent(0.05);
+            sochasticDescent(1/i);
 
             int weightIndex=0;
             for(int z=layerInputs.size()-1;z>0;z--)                                                                                         // ustawienie wag
@@ -281,6 +283,7 @@ class mlp{
 
             error.clear();                                                                                                                  // wyczyszczenie buforów
             columnWeightVector.clear();
+            i+=0.01;
         }
         
         print_weights();cout<<endl;
