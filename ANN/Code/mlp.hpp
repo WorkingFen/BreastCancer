@@ -17,7 +17,7 @@ class mlp{
     vector<double> columnWeightVector;                           // wektor kolumnowy przechowujący wagi wejść neuronów wchodzących w skład sieci
 
 
-     /*
+    /*
     outputValue - wartość na wyjściu sieci (wyjście może być wektorem, więc może istnieć konieczność wywołania tej metody dla każdego elementu wektora wyjść sieci)
     expectedOutputValue - oczekiwana wartość wyjścia
     inputNumber - numer wejścia neuronu (liczone od 0)
@@ -47,7 +47,6 @@ class mlp{
         double derivative = exp(s)/ pow(1 + exp(s), 2);
 
         double sum = 0;                                         // suma error * waga
-
         vector<double> weightVector;
         for(int i=0;i<layerInputs[layer+1];i++)
         {
@@ -57,17 +56,15 @@ class mlp{
         double weight;
         for(int i = 0; i < neurons[layer].size(); i++)
         {
-
             weight = weightVector[i];
-
-            sum += weight * errors[i]/neurons[layer][inputNumber].getOutput();
+            sum += weight * errors[i]/neurons[layer][i].getOutput();
         }
-
+ 
         return derivative * input * sum;
 
     }
 
-     /*
+    /*
     Metoda wykonująca propagację wsteczną. Wypełnia przy tym wektory kolumnowe wag i dq/d(theta).
     */
     void propagateBackwards()
@@ -93,7 +90,7 @@ class mlp{
                 columnWeightVector.insert(end(columnWeightVector), begin(weight), --end(weight)); // --end() bo chyba nie chcę wagi wejścia o wartości 1
 
 
-                cout<<endl;
+                //cout<<endl;
                 vector<double> errors;
 
                 for(int x=0;x<layerInputs[z+1];x++)                                                                                            // przygotowanie wektora errors
@@ -115,17 +112,29 @@ class mlp{
     }
 
     /*
-    Funkcja przeprowadzająca sochastyczny najszybszy spadek
+    Metoda przeprowadzająca sochastyczny najszybszy spadek
     */
     void sochasticDescent(double beta)
     {
         for(int i = 0; i < error.size(); ++i)
         {
-            columnWeightVector[i] = columnWeightVector[i] - beta * error[i] * 1/2;
+            columnWeightVector[i] = columnWeightVector[i] - (beta * error[i] * 0.5);
         }
 
         return;
+    }
 
+    /*
+    Metoda sprawdzająca dokładność przybliżenia wyjścia sieci neuronowej do zadanej oczekiwanej wartości.
+    */
+    bool precisionReached(double epsilon)
+    {
+        for(int i=0;i<networkOutput.size();i++)
+        {
+            if(abs(networkOutput[i]-expectedNetworkOutput[i])>epsilon)
+                return false;
+        }
+        return true;
     }
 
     public:
@@ -249,14 +258,32 @@ class mlp{
     */
     void processDataAndLearn()
     {
-        //pętla
-        processData();
-        propagateBackwards();
-        print_weights_column_vector();cout<<endl;
-        sochasticDescent(0.05);
-        print_weights_column_vector();cout<<endl;
         print_weights();cout<<endl;
-        //pętla
+
+        while(!precisionReached(0.1))
+        {
+            processData();
+            propagateBackwards();
+            sochasticDescent(0.05);
+
+            int weightIndex=0;
+            for(int z=layerInputs.size()-1;z>0;z--)                                                                                         // ustawienie wag
+            {
+                for(int i=0;i<layerInputs[z];i++)
+                {
+                    for(int j=0;j<layerInputs[z-1];j++)
+                    {
+                        neurons[z-1][i].setWeight(j,columnWeightVector[weightIndex]);
+                        weightIndex++;
+                    }
+                }
+            }
+
+            error.clear();                                                                                                                  // wyczyszczenie buforów
+            columnWeightVector.clear();
+        }
+        
+        print_weights();cout<<endl;
     }
 
     /*

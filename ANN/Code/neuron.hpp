@@ -103,7 +103,7 @@ class neuron{
     /*
     Zwraca referencję do wektora wag.
     */
-    vector<double>& getWeightVector()
+    vector<double> getWeightVector()
     {
         return weight;
     } 
