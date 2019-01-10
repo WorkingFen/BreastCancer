@@ -131,7 +131,7 @@ class mlp{
     {
         for(int i=0;i<networkOutput.size();i++)
         {
-            if(abs(networkOutput[i]-expectedNetworkOutput[i])>epsilon)
+            if(abs(networkOutput[i]-expectedNetworkOutput[i]) / expectedNetworkOutput[i] > epsilon)
                 return false;
         }
         return true;
