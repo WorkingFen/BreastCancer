@@ -12,7 +12,7 @@ int main()
     x.setInput(1,3);
     x.setInput(2,3);
     x.processDataAndLearn();
-    cout << x;
+    cout <<endl<<endl<< x;
     cout << endl;
 
     return 0;

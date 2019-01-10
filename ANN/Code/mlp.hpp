@@ -25,6 +25,7 @@ class mlp{
     double countOuterError(double outputValue, double expectedOutputValue, int inputNumber)
     {
         int layer=layerInputs.size()-2;
+
         return (outputValue-expectedOutputValue)*neurons[layer-1][inputNumber].getOutput();
     }
 
@@ -37,7 +38,6 @@ class mlp{
     ale już taki layer raczej musi być przekazany w parametrze, chociaż mogę się mylić
 
     */
-
     double countInnerError(vector<double> errors, int layer, int inputNumber, double input)
     {
         //double y = neurons[layer-1][inputNumber].getOutput(); // wyjście j-tego neuronu warstwy k-1
@@ -57,11 +57,14 @@ class mlp{
         double weight;
         for(int i = 0; i < neurons[layer].size(); i++)
         {
+
             weight = weightVector[i];
+
             sum += weight * errors[i]/neurons[layer][inputNumber].getOutput();
         }
 
         return derivative * input * sum;
+
     }
 
      /*
@@ -74,7 +77,11 @@ class mlp{
 
         for(int i=0;i<layerInputs[layer+1];i++)                                                                                                 // propagacja po neuronach warstwy wyjściowej
         {
+            vector<double> weight = neurons[layer][i].getWeightVector();                                                                    // tworzenie wektora kolumnowego wag                                                                     
+            columnWeightVector.insert(end(columnWeightVector), begin(weight), --end(weight)); // --end() bo chyba nie chcę wagi wejścia o wartości 1
+
             for(int j=0;j<layerInputs[layer];j++)
+
                 error.push_back(countOuterError(networkOutput[i],expectedNetworkOutput[i],j));
         }
 
@@ -83,9 +90,12 @@ class mlp{
             for(int i=0;i<layerInputs[z];i++)                                                                                                 
             {
                 vector<double> weight = neurons[z-1][i].getWeightVector();                                                                    // tworzenie wektora kolumnowego wag                                                                     
-                columnWeightVector.insert(end(columnWeightVector), begin(weight), end(weight));
+                columnWeightVector.insert(end(columnWeightVector), begin(weight), --end(weight)); // --end() bo chyba nie chcę wagi wejścia o wartości 1
 
+
+                cout<<endl;
                 vector<double> errors;
+
                 for(int x=0;x<layerInputs[z+1];x++)                                                                                            // przygotowanie wektora errors
                 {
                     errors.push_back(error[startingIndex+i+(x*layerInputs[z])]);                                                               // layerInputs[z]->offset, i->stride
@@ -93,6 +103,7 @@ class mlp{
 
                 for(int j=0;j<layerInputs[z-1];j++)
                 {
+                    // dlaczego z-2 a nie z-1 :/
                     if(z>1)
                         error.push_back(countInnerError(errors,z,j,neurons[z-2][j].getOutput()));
                     else
@@ -103,7 +114,70 @@ class mlp{
         }                                                                                       
     }
 
+    /*
+    Funkcja przeprowadzająca sochastyczny najszybszy spadek
+    */
+    void sochasticDescent(double beta)
+    {
+        for(int i = 0; i < error.size(); ++i)
+        {
+            columnWeightVector[i] = columnWeightVector[i] - beta * error[i] * 1/2;
+        }
+
+        return;
+
+    }
+
     public:
+
+    /*
+    Kozak debuggery
+    */
+    void print_weights()
+    {
+        cout<<"PRINT_WEIGHTS()"<<endl;
+        int layer=layerInputs.size()-1;
+        int j = 0;
+        for(int z=layer;z>0;z--)              
+        {
+            for(int i=0;i<layerInputs[z];i++)                                                                                                 
+            {
+                cout<<"warstwa : "<<z<<" / neuron: "<<i<<" / wejscia: "<<neurons[z-1][i].getNumberOfInputs()<<" / wagi: ";
+                vector<double> wagi = neurons[z-1][i].getWeightVector();
+                j = 0;
+                
+                for (vector<double>::const_iterator w = wagi.begin(); w != --wagi.end(); ++w)
+                    {
+                        cout << *w<<" ";
+                        
+                        j++;
+                    }
+                cout<<endl;
+            }
+        }        
+    }
+    void print_weights_column_vector()
+    {
+        cout<<"PRINT_WEIGHTS_COLUMN_VECTOR()"<<endl;
+
+        for(vector<double>::const_iterator i = columnWeightVector.begin(); i != columnWeightVector.end(); ++i)
+        {
+            cout<<*i<<" ";
+        }
+        cout<<endl;
+    }
+
+    void print_errors()
+    {
+        cout<<"PRINT_ERRORS()"<<endl;
+        for(vector<double>::const_iterator i = error.begin(); i != error.end(); ++i)
+        {
+            cout<<*i<<" ";
+        }
+        cout<<endl;     
+    }
+
+
     /*
     numberOfParameters - informacja o liczbie parametrów wejściowych
     layer - wektor przechwoujący informację o liczbie neuronów w każdej z powłok
@@ -178,6 +252,10 @@ class mlp{
         //pętla
         processData();
         propagateBackwards();
+        print_weights_column_vector();cout<<endl;
+        sochasticDescent(0.05);
+        print_weights_column_vector();cout<<endl;
+        print_weights();cout<<endl;
         //pętla
     }
 
