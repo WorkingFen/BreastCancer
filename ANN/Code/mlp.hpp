@@ -131,7 +131,7 @@ class mlp{
     {
         for(int i=0;i<networkOutput.size();i++)
         {
-            cout << abs(networkOutput[i]-expectedNetworkOutput[i]) / expectedNetworkOutput[i] << endl;
+            //cout << abs(networkOutput[i]-expectedNetworkOutput[i]) / expectedNetworkOutput[i] << endl;
             if(abs(networkOutput[i]-expectedNetworkOutput[i]) / expectedNetworkOutput[i] > epsilon)
                 return false;
         }
@@ -260,7 +260,7 @@ class mlp{
     void processDataAndLearn()
     {
         print_weights();cout<<endl;
-        int i=1;
+        int i=1.5;
 
         while(!precisionReached(0.1))
         {
@@ -283,7 +283,10 @@ class mlp{
 
             error.clear();                                                                                                                  // wyczyszczenie buforów
             columnWeightVector.clear();
-            i+=0.01;
+            if(i%3==0)
+                i+=2;
+
+            i+=0.5;
         }
         
         print_weights();cout<<endl;
