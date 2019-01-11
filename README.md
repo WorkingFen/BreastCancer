@@ -2,14 +2,14 @@
 MLP + Najszybszy spadek z bezwładnością
 
 Napisać pakiet umożliwiający trenowanie perceptronów wielowarstwowych przy użyciu metody najszybszego spadku z bezwładnością. Rozwiązanie przetestować na zadaniu: 
-[Dane](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic).)
+[Dane](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic))
 
 ## Pierwsze kroki
 Zanim zaczniemy cokolwiek pobierać, to najpierw musimy cokolwiek zrobić.
 ### Wymagania wstępne
 Wykonanie choć dokumentacji z naszej strony, więc chwilowo nie ma nic
 ### Kompilacja
-g++ -std=c++11 neuron.hpp mlp.hpp main.cpp -o pszt
+Wywołanie **make**, bo mamy plik [makefile](https://github.com/WorkingFen/PSZTProject/blob/master/ANN/Code/makefile)
  
 ## Technologie
 Jeszcze nie mamy bladego pojęcia, co i jak musimy zrobić
