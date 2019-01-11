@@ -9,10 +9,10 @@
 using namespace std;
 
 class mlp{
-    vector<int> layerInputs;                                      // wektor przechowujący informację o liczbie wejść do neuronów w każdej z warstw; elementy wektora o indeksach od 1 wzwyż można też traktować jako liczbę neuronów w danej warstwie sieci
-    vector<vector<neuron>> neurons;
-    vector<double> networkOutput;
-    vector<double> expectedNetworkOutput;
+    vector<int> layerInputs;                                     // wektor przechowujący informację o liczbie wejść do neuronów w każdej z warstw; elementy wektora o indeksach od 1 wzwyż można też traktować jako liczbę neuronów w danej warstwie sieci
+    vector<vector<neuron>> neurons;                              // wektor wektorów reprezentujący neurony i ich ułożenie w sieci
+    vector<double> networkOutput;                                // wektor przechowujący wyjścia sieci
+    vector<double> expectedNetworkOutput;                        // wektor przechowujący oczekiwane wyjścia sieci (proces uczenia)
     vector<double> error;                                        // wektor kolumnowy przechowujący dq/d(theta)
     vector<double> columnWeightVector;                           // wektor kolumnowy przechowujący wagi wejść neuronów wchodzących w skład sieci
 
@@ -40,13 +40,10 @@ class mlp{
     */
     double countInnerError(vector<double> errors, int layer, int inputNumber, double input)
     {
-        //double y = neurons[layer-1][inputNumber].getOutput(); // wyjście j-tego neuronu warstwy k-1
-        //double s = neurons[layer][inputNumber].getSum();        // suma obliczana przez i-ty neuron k-tej warstwy
-
-        double s = neurons[layer-1][inputNumber].getSum();    // suma obliczana przez i-ty neuron k-tej warstwy
+        double s = neurons[layer-1][inputNumber].getSum();                                                                                      // suma obliczana przez i-ty neuron k-tej warstwy
         double derivative = exp(s)/ pow(1 + exp(s), 2);
 
-        double sum = 0;                                         // suma error * waga
+        double sum = 0;                                                                                                                         // suma error * waga
         vector<double> weightVector;
         for(int i=0;i<layerInputs[layer+1];i++)
         {
@@ -61,7 +58,6 @@ class mlp{
         }
  
         return derivative * input * sum;
-
     }
 
     /*
@@ -72,7 +68,7 @@ class mlp{
         int startingIndex=0;
         int layer=layerInputs.size()-2;
 
-        for(int i=0;i<layerInputs[layer+1];i++)                                                                                                 // propagacja po neuronach warstwy wyjściowej
+        for(int i=0;i<layerInputs[layer+1];i++)                                                                                              // propagacja po neuronach warstwy wyjściowej
         {
             vector<double> weight = neurons[layer][i].getWeightVector();                                                                    // tworzenie wektora kolumnowego wag                                                                     
             columnWeightVector.insert(end(columnWeightVector), begin(weight), --end(weight)); // --end() bo chyba nie chcę wagi wejścia o wartości 1
@@ -89,13 +85,11 @@ class mlp{
                 vector<double> weight = neurons[z-1][i].getWeightVector();                                                                    // tworzenie wektora kolumnowego wag                                                                     
                 columnWeightVector.insert(end(columnWeightVector), begin(weight), --end(weight)); // --end() bo chyba nie chcę wagi wejścia o wartości 1
 
-
-                //cout<<endl;
                 vector<double> errors;
 
                 for(int x=0;x<layerInputs[z+1];x++)                                                                                            // przygotowanie wektora errors
                 {
-                    errors.push_back(error[startingIndex+i+(x*layerInputs[z])]);                                                               // layerInputs[z]->offset, i->stride
+                    errors.push_back(error[startingIndex+i+(x*layerInputs[z])]);                                                               // x*layerInputs[z]->stride, startingIndex+i->offset
                 }
 
                 for(int j=0;j<layerInputs[z-1];j++)
@@ -259,10 +253,10 @@ class mlp{
     */
     void processDataAndLearn()
     {
-        print_weights();cout<<endl;
-        int i=1.5;
+        //print_weights();cout<<endl;
+        double i=2;
 
-        while(!precisionReached(0.1))
+        while(!precisionReached(0.05) && i<30)
         {
             processData();
             propagateBackwards();
@@ -283,13 +277,14 @@ class mlp{
 
             error.clear();                                                                                                                  // wyczyszczenie buforów
             columnWeightVector.clear();
-            if(i%3==0)
-                i+=2;
 
-            i+=0.5;
+            //if(fmod(i,3)==0)
+             //   i+=2;
+
+            i+=0.1;
         }
         
-        print_weights();cout<<endl;
+        //print_weights();cout<<endl;
     }
 
     /*

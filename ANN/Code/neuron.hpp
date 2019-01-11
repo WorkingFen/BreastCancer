@@ -50,9 +50,15 @@ class neuron{
         numberOfInputs=1;
         input.resize(1, 1.0);
 
-        default_random_engine rand_num{static_cast<long unsigned int>(std::chrono::high_resolution_clock::now().time_since_epoch().count())};
-        uniform_real_distribution<float> dis(-0.18, 0.18);                          // ∼U (−1/√dim(we),1/√dim(we)) - około (-0,18;0,18)
-        weight.resize(1, dis(rand_num));                                              
+        if(type==1)                                                               // ustawianie wag dla neuronu z warstwy ukrytej
+        {
+            default_random_engine rand_num{static_cast<long unsigned int>(std::chrono::high_resolution_clock::now().time_since_epoch().count())};
+            uniform_real_distribution<float> dis(-0.18, 0.18);                    // ∼U (−1/√dim(we),1/√dim(we)) - około (-0,18;0,18)
+            weight.resize(1, dis(rand_num));   
+        }
+        else                                                                     // ustawianie wag dla neuronu z warstwy wyjściowej (w przybliżeniu 0)
+            weight.resize(1, 0.0000001);
+                                                   
     }
 
     neuron(int type, int numberOfInputs)
@@ -65,12 +71,21 @@ class neuron{
         input[numberOfInputs]=1;
         weight.resize(this->numberOfInputs);
 
-        default_random_engine rand_num{static_cast<long unsigned int>(chrono::high_resolution_clock::now().time_since_epoch().count())};
-        this_thread::sleep_for (chrono::milliseconds(1));                     // potrzebne krótkie oczekiwanie, aby seed był inny przy tworzeniu wielu neuronów w krótkim odstępie czasowym
-        uniform_real_distribution<float> dis(-0.18, 0.18);                    // ∼U (−1/√dim(we),1/√dim(we)) - około (-0,18;0,18)
+        if(type==1)                                                               // ustawianie wag dla neuronu z warstwy ukrytej
+        {
+            default_random_engine rand_num{static_cast<long unsigned int>(chrono::high_resolution_clock::now().time_since_epoch().count())};
+            this_thread::sleep_for (chrono::milliseconds(1));                     // potrzebne krótkie oczekiwanie, aby seed był inny przy tworzeniu wielu neuronów w krótkim odstępie czasowym
+            uniform_real_distribution<float> dis(-0.18, 0.18);                    // ∼U (−1/√dim(we),1/√dim(we)) - około (-0,18;0,18)
 
-        for(int i=0;i<this->numberOfInputs;i++)
-            weight[i]=dis(rand_num);
+            for(int i=0;i<this->numberOfInputs;i++)
+                weight[i]=dis(rand_num);
+        }
+        else                                                                     // ustawianie wag dla neuronu z warstwy wyjściowej (w przybliżeniu 0)
+        {
+            for(int i=0;i<this->numberOfInputs;i++)
+                weight[i]=0.0000001;
+        }
+        
     }
 
     ~neuron(){};
