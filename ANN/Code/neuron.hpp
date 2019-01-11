@@ -49,16 +49,7 @@ class neuron{
         type=0;
         numberOfInputs=1;
         input.resize(1, 1.0);
-
-        if(type==1)                                                               // ustawianie wag dla neuronu z warstwy ukrytej
-        {
-            default_random_engine rand_num{static_cast<long unsigned int>(std::chrono::high_resolution_clock::now().time_since_epoch().count())};
-            uniform_real_distribution<float> dis(-0.18, 0.18);                    // ∼U (−1/√dim(we),1/√dim(we)) - około (-0,18;0,18)
-            weight.resize(1, dis(rand_num));   
-        }
-        else                                                                     // ustawianie wag dla neuronu z warstwy wyjściowej (w przybliżeniu 0)
-            weight.resize(1, 0.0000001);
-                                                   
+        weight.resize(1, 0.0000001);                                                           // ustawianie wag dla neuronu z warstwy wyjściowej (w przybliżeniu 0)                                        
     }
 
     neuron(int type, int numberOfInputs)
