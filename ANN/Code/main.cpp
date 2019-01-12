@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
     uniform_real_distribution<> dis(0,284);                                                                                                 // jest 285 instancji problemu
 
 
-    for(int i=0;i<1;i++)                                                                                                                 // uczenie sieci neuronowej na 2000 (teraz to 1 w sumie) wybieranych losowo przykładach
+    for(int i=0;i<2000;i++)                                                                                                                 // uczenie sieci neuronowej na 2000 wybieranych losowo przykładach
     {
         int chosenExample=dis(rand_num);
         
@@ -69,15 +69,52 @@ int main(int argc, char* argv[])
         }
         ////////////////////////////////////////////////////////////////////////////////////
 
-        cout << input[chosenExample]->getDiagnosis() << endl;
         if(input[chosenExample]->getDiagnosis()=='M')
             first.setExpectedOutput(0, 1);
         else
             first.setExpectedOutput(0, 0);
 
-        first.processDataAndLearn();
-        cout << endl << endl << first;
-        cout << endl;    
+        first.processDataAndLearn();   
+    }
+
+    for(int i=0;i<284;i++)                                                                                                                              // sprawdzanie jakości nauki
+    {
+        //////////// Skalowanie danych wejściowych ////////////
+        for(int j = 0; j < 2; j++)                                                          
+        {
+            first.setInput(j, (input[i]->getFeature(j))/10);
+        }
+        first.setInput(2, (input[i]->getFeature(2))/100);
+        first.setInput(3, (input[i]->getFeature(3))/1000);
+        for(int j = 4; j < 9; j++)                                                          
+        {
+            first.setInput(j, (input[i]->getFeature(j))*10);
+        }
+        first.setInput(9, (input[i]->getFeature(9))*100);
+        for(int j = 10; j < 13; j++)                                                          
+        {
+            first.setInput(j, input[i]->getFeature(j));
+        }
+        first.setInput(13, (input[i]->getFeature(13))/100);
+        first.setInput(14, (input[i]->getFeature(14))*1000);
+        for(int j = 15; j < 19; j++)                                                          
+        {
+            first.setInput(j, (input[i]->getFeature(j))*100);
+        }
+        first.setInput(19, (input[i]->getFeature(19))*1000);
+        first.setInput(20, (input[i]->getFeature(20))/10);
+        first.setInput(21, (input[i]->getFeature(21))/10);
+        first.setInput(22, (input[i]->getFeature(22))/100);
+        first.setInput(23, (input[i]->getFeature(23))/1000);
+        for(int j = 24; j < 30; j++)                                                          
+        {
+            first.setInput(j, (input[i]->getFeature(j))*10);
+        }
+        ////////////////////////////////////////////////////////////////////////////////////
+        first.processData();
+        cout << input[i]->getDiagnosis() << " ";
+        cout << first;
+        cout << endl;
     }
 
     /*
