@@ -78,7 +78,7 @@ class mlp{
         vector<double> weightVector;
         for(int i=0;i<layerInputs[2];i++)
         {
-            weightVector.push_back(neurons[1][i].getWeightVector()[inputNumber]);
+            weightVector.push_back(neurons[1][i].getWeightVector()[neuronNumber]);
         }
         
         double weight;
@@ -87,7 +87,7 @@ class mlp{
             weight = weightVector[i];
             sum += weight * errors[i]/neurons[1][i].getOutput();
         }
-        cout << s << " " << derivative * input * sum << endl;
+
         return derivative * input * sum;
     }
 
@@ -287,7 +287,7 @@ class mlp{
     */
     void processDataAndLearn()
     {
-        print_weights();cout<<endl;
+        //print_weights();cout<<endl;
         double i=2;
 
         while(!precisionReached(0.05) && i<30)
@@ -319,7 +319,7 @@ class mlp{
             i+=0.1;
         }
         
-        print_weights();cout<<endl;
+        //print_weights();cout<<endl;
     }
 
     /*
