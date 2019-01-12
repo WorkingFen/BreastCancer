@@ -6,13 +6,14 @@ Napisać pakiet umożliwiający trenowanie perceptronów wielowarstwowych przy u
 
 ## Pierwsze kroki
 Zanim zaczniemy cokolwiek pobierać, to najpierw musimy cokolwiek zrobić.
-### Wymagania wstępne
-Wykonanie choć dokumentacji z naszej strony, więc chwilowo nie ma nic
+
 ### Kompilacja
 Wywołanie **make**, bo mamy plik [makefile](https://github.com/WorkingFen/PSZTProject/blob/master/ANN/Code/makefile)
+lub
+(na Windowsie w przypadku braku make) g++ -std=c++11 neuron.hpp mlp.hpp main.cpp -o pszt
  
 ## Technologie
-Jeszcze nie mamy bladego pojęcia, co i jak musimy zrobić
+C++
 
 ## Autorzy
 - **Bochenek Mateusz** - [mbochene](https://github.com/mbochene)
