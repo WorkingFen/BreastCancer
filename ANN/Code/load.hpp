@@ -31,6 +31,10 @@ public:
 				input.push_back(new Data(id, diagnosis, features));
 			}
 		}
+		else{
+		    std::string msg = "An error occurred while loading from file " + file;
+		    throw msg;
+		}
 		this->loading.close();
 		return input;
 	}

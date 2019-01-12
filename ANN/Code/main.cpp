@@ -5,12 +5,16 @@
 
 using namespace std;
 
-int main()
+int main(int argc, char* argv[])
 {
     Load load;
     std::vector<Data*> input;
 
-    input = load.read("../Data/wdbc.data");
+    if(argc > 1){
+	    std::string file(argv[1]);
+	    input = load.read(file);
+    }
+    else input = load.read("../Data/wdbc.data");
 
     mlp first(30, {2, 1});
 
