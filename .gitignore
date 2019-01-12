@@ -31,6 +31,9 @@
 *.out
 *.app
 
+# VIM temp files
+*.swp
+
 # Project files
 *.cbp
 *.layout
