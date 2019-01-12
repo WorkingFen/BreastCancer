@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <chrono>
+#include <random>
 #include "mlp.hpp"
 #include "load.hpp"
 
@@ -16,17 +18,69 @@ int main(int argc, char* argv[])
     }
     else input = load.read("../Data/wdbc.data");
 
-    mlp first(30, {2, 1});
 
-    for(int i = 0; i < 30; i++) first.setInput(i, 3);
+    mlp first(30, {5, 1});
 
-    first.processData();
-    cout << endl << endl << first;
-    first.setExpectedOutput(0, 77);
-    first.processDataAndLearn();
-    cout << endl << endl << first;
-    cout << endl;    
+    default_random_engine rand_num{static_cast<long unsigned int>(chrono::high_resolution_clock::now().time_since_epoch().count())};
+    uniform_real_distribution<> dis(0,284);                                                                                                 // jest 285 instancji problemu
 
+
+    for(int i=0;i<1;i++)                                                                                                                 // uczenie sieci neuronowej na 2000 (teraz to 1 w sumie) wybieranych losowo przykładach
+    {
+        int chosenExample=dis(rand_num);
+        
+        /*
+        for(int j = 0; j < 30; j++) 
+        {
+            first.setInput(j, input[chosenExample]->getFeature(j));
+        }
+        */
+
+        //////////// Skalowanie danych wejściowych ////////////
+        for(int j = 0; j < 2; j++)                                                          
+        {
+            first.setInput(j, (input[chosenExample]->getFeature(j))/10);
+        }
+        first.setInput(2, (input[chosenExample]->getFeature(2))/100);
+        first.setInput(3, (input[chosenExample]->getFeature(3))/1000);
+        for(int j = 4; j < 9; j++)                                                          
+        {
+            first.setInput(j, (input[chosenExample]->getFeature(j))*10);
+        }
+        first.setInput(9, (input[chosenExample]->getFeature(9))*100);
+        for(int j = 10; j < 13; j++)                                                          
+        {
+            first.setInput(j, input[chosenExample]->getFeature(j));
+        }
+        first.setInput(13, (input[chosenExample]->getFeature(13))/100);
+        first.setInput(14, (input[chosenExample]->getFeature(14))*1000);
+        for(int j = 15; j < 19; j++)                                                          
+        {
+            first.setInput(j, (input[chosenExample]->getFeature(j))*100);
+        }
+        first.setInput(19, (input[chosenExample]->getFeature(19))*1000);
+        first.setInput(20, (input[chosenExample]->getFeature(20))/10);
+        first.setInput(21, (input[chosenExample]->getFeature(21))/10);
+        first.setInput(22, (input[chosenExample]->getFeature(22))/100);
+        first.setInput(23, (input[chosenExample]->getFeature(23))/1000);
+        for(int j = 24; j < 30; j++)                                                          
+        {
+            first.setInput(j, (input[chosenExample]->getFeature(j))*10);
+        }
+        ////////////////////////////////////////////////////////////////////////////////////
+
+        cout << input[chosenExample]->getDiagnosis() << endl;
+        if(input[chosenExample]->getDiagnosis()=='M')
+            first.setExpectedOutput(0, 1);
+        else
+            first.setExpectedOutput(0, 0);
+
+        first.processDataAndLearn();
+        cout << endl << endl << first;
+        cout << endl;    
+    }
+
+    /*
     mlp x(3, {2, 1});
 
     x.setInput(0,3);
@@ -38,6 +92,7 @@ int main(int argc, char* argv[])
     x.processDataAndLearn();
     cout <<endl<<endl<< x;
     cout << endl;
+    */
 
     /*for(auto a : input){
 	    cout << a->getID() << " " << a->getDiagnosis() << " " << a->getFeature(0) << endl;
