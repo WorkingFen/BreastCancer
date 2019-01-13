@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
     uniform_real_distribution<> dis(0,284);                                                                                                 // jest 285 instancji problemu
 
 
-    for(int i=0;i<2000;i++)                                                                                                                 // uczenie sieci neuronowej na 2000 wybieranych losowo przykładach
+    for(int i=0;i<3125;i++)                                                                                                                 // uczenie sieci neuronowej na 2000 wybieranych losowo przykładach
     {
         int chosenExample=dis(rand_num);
         
@@ -37,6 +37,7 @@ int main(int argc, char* argv[])
         */
 
         //////////// Skalowanie danych wejściowych ////////////
+        
         for(int j = 0; j < 2; j++)                                                          
         {
             first.setInput(j, (input[chosenExample]->getFeature(j))/10);
@@ -67,6 +68,7 @@ int main(int argc, char* argv[])
         {
             first.setInput(j, (input[chosenExample]->getFeature(j))*10);
         }
+        
         ////////////////////////////////////////////////////////////////////////////////////
 
         if(input[chosenExample]->getDiagnosis()=='M')
@@ -74,7 +76,11 @@ int main(int argc, char* argv[])
         else
             first.setExpectedOutput(0, 0);
 
-        first.processDataAndLearn();   
+        first.processDataAndLearn();  
+        //cout << input[chosenExample]->getDiagnosis() << " ";
+        //cout << first;
+        //cout << endl; 
+        cout << i << endl;
     }
 
     for(int i=0;i<284;i++)                                                                                                                              // sprawdzanie jakości nauki
@@ -113,7 +119,7 @@ int main(int argc, char* argv[])
         ////////////////////////////////////////////////////////////////////////////////////
         first.processData();
         cout << input[i]->getDiagnosis() << " ";
-        cout << first;
+        cout << first.getOutputVector()[0];
         cout << endl;
     }
 

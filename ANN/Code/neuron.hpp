@@ -49,7 +49,7 @@ class neuron{
         type=0;
         numberOfInputs=1;
         input.resize(1, 1.0);
-        weight.resize(1, 0.0000001);                                                           // ustawianie wag dla neuronu z warstwy wyjściowej (w przybliżeniu 0)                                        
+        weight.resize(1, 0.000000000000001);                                                           // ustawianie wag dla neuronu z warstwy wyjściowej (w przybliżeniu 0)                                        
     }
 
     neuron(int type, int numberOfInputs)
@@ -74,7 +74,7 @@ class neuron{
         else                                                                     // ustawianie wag dla neuronu z warstwy wyjściowej (w przybliżeniu 0)
         {
             for(int i=0;i<this->numberOfInputs;i++)
-                weight[i]=0.0000001;
+                weight[i]=0.000000000000001;
         }
         
     }

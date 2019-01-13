@@ -30,24 +30,25 @@ class mlp{
     }
 
     /*
-    layer - numer warstwy w której jesteśmy (k)
     errors - wektor błędów z k+1-szej warstwy
-    inputNumber - numer wejścia neuronu (liczone od 0)
+    layer - numer warstwy w której jesteśmy (k)
+    neuronNumber - numer neuronu z pierwszej warstwy
+    input - wartość na danym wejściu neuronu, dla którego liczymy błędy
 
     zapewne zrobimy macierz errors w klasie i nie będzie ona potrzebna tutaj w parametrach
     ale już taki layer raczej musi być przekazany w parametrze, chociaż mogę się mylić
 
     */
-    double countInnerError(vector<double> errors, int layer, int inputNumber, double input)
+    double countInnerError(vector<double> errors, int layer, int neuronNumber, double input)
     {
-        double s = neurons[layer-1][inputNumber].getSum();                                                                                      // suma obliczana przez i-ty neuron k-tej warstwy
+        double s = neurons[layer-1][neuronNumber].getSum();                                                                                      // suma obliczana przez i-ty neuron k-tej warstwy
         double derivative = exp(s)/ pow(1 + exp(s), 2);
 
         double sum = 0;                                                                                                                         // suma error * waga
         vector<double> weightVector;
         for(int i=0;i<layerInputs[layer+1];i++)
         {
-            weightVector.push_back(neurons[layer][i].getWeightVector()[inputNumber]);
+            weightVector.push_back(neurons[layer][i].getWeightVector()[neuronNumber]);
         }
         
         double weight;
@@ -61,15 +62,15 @@ class mlp{
     }
 
     /*
-    neuronNumber - numer neuronu z pierwszej warstwy
     errors - wektor błędów z k+1-szej warstwy
-    inputNumber - numer wejścia neuronu (liczone od 0)
+    neuronNumber - numer neuronu z pierwszej warstwy
+    input - wartość na danym wejściu neuronu, dla którego liczymy błędy
 
     zapewne zrobimy macierz errors w klasie i nie będzie ona potrzebna tutaj w parametrach
     ale już taki layer raczej musi być przekazany w parametrze, chociaż mogę się mylić
 
     */
-    double countInputError(vector<double> errors, int neuronNumber, int inputNumber, double input)
+    double countInputError(vector<double> errors, int neuronNumber, double input)
     {
         double s = neurons[0][neuronNumber].getSum();                                                                                      // suma obliczana przez i-ty neuron k-tej warstwy
         double derivative = exp(s)/ pow(1 + exp(s), 2);
@@ -127,9 +128,9 @@ class mlp{
                 {
                     // dlaczego z-2 a nie z-1 :/
                     if(z>1)
-                        error.push_back(countInnerError(errors,z,j,neurons[z-2][j].getOutput()));
+                        error.push_back(countInnerError(errors,z,i,neurons[z-2][j].getOutput()));
                     else
-                        error.push_back(countInputError(errors,i,j,neurons[z-1][0].getInput(j)));                                              // liczenie błędów dla wejść sieci (wejście nie zależy od numeru neuronu -> dla każdego takie samo)
+                        error.push_back(countInputError(errors,i,neurons[z-1][0].getInput(j)));                                              // liczenie błędów dla wejść sieci (wejście nie zależy od numeru neuronu -> dla każdego takie samo)
                     
                 }
             }
@@ -288,9 +289,9 @@ class mlp{
     void processDataAndLearn()
     {
         //print_weights();cout<<endl;
-        double i=2;
+        double i=10;
 
-        while(!precisionReached(0.05) && i<30)
+        while(!precisionReached(0.01) && i<50)
         {
             //print_weights();cout<<endl;
             processData();
@@ -316,7 +317,7 @@ class mlp{
             //if(fmod(i,3)==0)
              //   i+=2;
 
-            i+=0.1;
+            i+=0.5;
         }
         
         //print_weights();cout<<endl;
