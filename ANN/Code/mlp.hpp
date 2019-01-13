@@ -291,7 +291,7 @@ class mlp{
         //print_weights();cout<<endl;
         double i=10;
 
-        while(!precisionReached(0.01) && i<50)
+        while(!precisionReached(0.0001) && i<50)
         {
             //print_weights();cout<<endl;
             processData();

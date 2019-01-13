@@ -24,8 +24,9 @@ int main(int argc, char* argv[])
     default_random_engine rand_num{static_cast<long unsigned int>(chrono::high_resolution_clock::now().time_since_epoch().count())};
     uniform_real_distribution<> dis(0,284);                                                                                                 // jest 285 instancji problemu
 
+    int properlyClassified=0;
 
-    for(int i=0;i<3125;i++)                                                                                                                 // uczenie sieci neuronowej na 2000 wybieranych losowo przykładach
+    for(int i=0;i<5700;i++)                                                                                                                 // uczenie sieci neuronowej na 2000 wybieranych losowo przykładach
     {
         int chosenExample=dis(rand_num);
         
@@ -121,8 +122,12 @@ int main(int argc, char* argv[])
         cout << input[i]->getDiagnosis() << " ";
         cout << first.getOutputVector()[0];
         cout << endl;
+
+        if((input[i]->getDiagnosis()=='M' && first.getOutputVector()[0]>=0.5) || (input[i]->getDiagnosis()=='B' && first.getOutputVector()[0]<0.5))
+            properlyClassified+=1;
     }
 
+    cout << "Properly classified: " << properlyClassified << " in 285 examples. That is " << ((double)properlyClassified/285)*100 << " percent." << endl;
     /*
     mlp x(3, {2, 1});
 
