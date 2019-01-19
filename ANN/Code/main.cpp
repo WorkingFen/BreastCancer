@@ -6,8 +6,6 @@
 #include "load.hpp"
 #include "test.hpp"
 
-using namespace std;
-
 int main(int argc, char* argv[])
 {
     Load load;
