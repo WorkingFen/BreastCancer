@@ -9,14 +9,12 @@
 using namespace std;
 
 class neuron{
-    vector<double> input;                                           // wektor wejść
-    vector<double> weight;                                          // wektor wag
+    vector<double> input;                            // wektor wejść
+    vector<double> weight;                           // wektor wag
     double output, sumValue;
-    int type, numberOfInputs;                                       // type==0 to neuron liniowy; type==1 to neuron sigmoidalny
+    int type, numberOfInputs;                        // type==0 to neuron liniowy; type==1 to neuron sigmoidalny
 
-    /*
-    Sumator
-    */
+    /*  Sumator  */
     double sum()
     {
         double x=0;
@@ -27,9 +25,7 @@ class neuron{
         return x;
     }
 
-    /*
-    Funkcja aktywacyjna
-    */
+    /*  Funkcja aktywacyjna  */
     double applyFunction()
     {
         if(type==0)
@@ -49,7 +45,8 @@ class neuron{
         type=0;
         numberOfInputs=1;
         input.resize(1, 1.0);
-        weight.resize(1, 0.000000000000001);                                                           // ustawianie wag dla neuronu z warstwy wyjściowej (w przybliżeniu 0)                                        
+        weight.resize(1, 0.000000000000001);        
+       	// ustawianie wag dla neuronu z warstwy wyjściowej (w przybliżeniu 0)                                      
     }
 
     neuron(int type, int numberOfInputs)
@@ -62,16 +59,20 @@ class neuron{
         input[numberOfInputs]=1;
         weight.resize(this->numberOfInputs);
 
-        if(type==1)                                                               // ustawianie wag dla neuronu z warstwy ukrytej
+        if(type==1)      // ustawianie wag dla neuronu z warstwy ukrytej
         {
-            default_random_engine rand_num{static_cast<long unsigned int>(chrono::high_resolution_clock::now().time_since_epoch().count())};
-            this_thread::sleep_for (chrono::milliseconds(1));                     // potrzebne krótkie oczekiwanie, aby seed był inny przy tworzeniu wielu neuronów w krótkim odstępie czasowym
-            uniform_real_distribution<float> dis(-0.18, 0.18);                    // ∼U (−1/√dim(we),1/√dim(we)) - około (-0,18;0,18)
+            default_random_engine rand_num
+	    {
+	        static_cast<long unsigned int>(chrono::high_resolution_clock::now().time_since_epoch().count())
+	    };
+            this_thread::sleep_for (chrono::milliseconds(1)); // potrzebne krótkie oczekiwanie, aby seed był inny
+	   	         // przy tworzeniu wielu neuronów w krótkim odstępie czasowym
+            uniform_real_distribution<float> dis(-0.18, 0.18);   // ∼U (−1/√dim(we),1/√dim(we)) - około (-0,18;0,18)
 
             for(int i=0;i<this->numberOfInputs;i++)
                 weight[i]=dis(rand_num);
         }
-        else                                                                     // ustawianie wag dla neuronu z warstwy wyjściowej (w przybliżeniu 0)
+        else             // ustawianie wag dla neuronu z warstwy wyjściowej (w przybliżeniu 0)
         {
             for(int i=0;i<this->numberOfInputs;i++)
                 weight[i]=0.000000000000001;
@@ -81,67 +82,51 @@ class neuron{
 
     ~neuron(){};
 
-    /*
-    Zwraca liczbę "edytowalnych" wejść -> ostatnie wejście ma wartość 1.
-    */
+    /*  Zwraca liczbę "edytowalnych" wejść -> ostatnie wejście ma wartość 1.  */
     int getNumberOfInputs()
     {
         return numberOfInputs-1;
     }
 
-     /*
-    Ustawia wartość na danym wejściu neuronu.
-    */
+     /*  Ustawia wartość na danym wejściu neuronu.  */
     void setInput(int inputNumber, double value)
     {
         input[inputNumber]=value;
     }
 
-     /*
-    Ustawia wagę na danym wejściu neuronu.
-    */
+     /*  Ustawia wagę na danym wejściu neuronu.  */
     void setWeight(int inputNumber, double value)
     {
         weight[inputNumber]=value;
     }
 
     
-    /*
-    Zwraca referencję do wektora wag.
-    */
+    /*  Zwraca referencję do wektora wag.  */
     vector<double> getWeightVector()
     {
         return weight;
     } 
 
-    /*
-    Wyjście neuronu po przetworzeniu wejść w sumatorze i po zastosowaniu funkcji aktywacyjnej.
-    */
+    /*  Wyjście neuronu po przetworzeniu wejść w sumatorze i po zastosowaniu funkcji aktywacyjnej.  */
     double getNewOutput()
     {
         output=applyFunction();
         return output;
     }
 
-    /*
-    Zwraca wartość znajdującą się na danym wejściu neuronu.
-    */
+    /*  Zwraca wartość znajdującą się na danym wejściu neuronu.  */
     double getInput(int inputNumber)
     {
         return input[inputNumber];
     }
 
-    /*
-    Zwraca wartość znajdującą się na wyjściu neuronu (bez dokonywania żadnych dodatkowych operacji).
-    */
+    /*  Zwraca wartość znajdującą się na wyjściu neuronu (bez dokonywania żadnych dodatkowych operacji).  */
     double getOutput()
     {
         return output;
     }
 
-    /*
-    Zwraca sumę ważoną wejść danego neuronu.
-    */
+    /*  Zwraca sumę ważoną wejść danego neuronu.  */
     double getSum()
     {
         return sumValue;

@@ -19,14 +19,12 @@ public:
 		if(loading.good()){
 			int id;
 			char diagnosis;
-			//double* features;
 			std::vector<double> features(30);
 			while(loading >> line){
 				loading >> line;
 				data = split(line, ',');
 				id = atoi(data[0].c_str());
 				diagnosis = data[1][0];
-				//features = new double [30];
 				for(int i = 0; i < 30; i++)
 					features[i] = std::stod(data[i+2]);
 				input.push_back(new Data(id, diagnosis, features));

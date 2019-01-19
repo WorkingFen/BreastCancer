@@ -1,0 +1,40 @@
+#Static scale changing
+
+First parameter -> ID
+Second parameter -> Type of cancer
+
+3..32 -> Second parameter dependencies
+
+/* ? digit/s to the (L)eft and 
+   ? digit/s to the (R)ight of the decimal point */  PS  |    B |   PF
+
+3. -> 1/2L and 2/1R                               -> /10  ->/10  ->/10^2
+4. -> 2L and 2/1R                                 -> /10  ->/10  ->/10^2
+5. -> 2L and 2R                                   -> /10  ->/10^2->/10^2
+6. -> 3L and 0/1R                                 -> /10^2->/10^3->/10^2
+7. -> 0L and 5/4R after 10^2; after 10            -> *10^2->*10  ->*10
+8. -> 0L and 5/4R after 10^2; after 10            -> *10^2->*10  ->*10
+9. -> 0L and 5/4R after 10^2; after 10^3          -> *10^3->*10  ->*10^2
+10.-> 0L and 5R after 10^2; after 10^3            -> *10^3->*10  ->*10^2
+11.-> 0L and 4R after 10                          -> *10  ->*10  ->*10
+12.-> 0L and 5R after 10^2                        -> *10^2->*10^2->*10^2
+13.-> 0L and 4R after 10                          -> *10  ->==   ->*10
+14.-> 1/0L and 3/4/2R; after 10?                  -> *10  ->==   ->==
+15.-> 1L and 3R                                   -> ==   ->==   ->/10
+16.-> 2L and 2R                                   -> /10  ->/10^2->/10^2
+17.-> 0L and 6/5R after 10^3; after 10^2          -> *10^3->*10^3->*10^2
+18.-> 0L and 5/6R after 10^3; after 10^2?         -> *10^3->*10^2->*10^2
+19.-> 0L and 6/5R after 10^3; after 10^2          -> *10^3->*10^2->*10^2
+20.-> 0L and 6/5/4R after 10^3; after 10^2        -> *10^3->*10^2->*10^2
+21.-> 0L and 5R after 10^2                        -> *10^2->*10^2->*10^2
+22.-> 0L and 6R after 10^3                        -> *10^3->*10^3->*10^3
+23.-> 1/2L and 3/2/1R                             -> /10  ->/10  ->/10^2
+24.-> 2L and 2R                                   -> /10  ->/10  ->/10^2
+25.-> 2/3L and 2/1R                               -> /10^2->/10^2->/10^3
+26.-> 3L and 1R                                   -> /10^2->/10^3->/10^3
+27.-> 0L and 5/4R after 10^2; after 10            -> *10^2->*10  ->*10
+28.-> 0L and 5/4R after 10^2; after 10            -> *10^2->*10  ->*10
+29.-> 0L and 4/6R after 10; after 10^3; after 10^2-> *10^2->*10  ->*10
+30.-> 0L and 5/6R after 10^2; after 10^3          -> *10^3->*10  ->*10^2
+31.-> 0L and 4R after 10                          -> *10  ->*10  ->*10
+32.-> 0L and 5/4R after 10^2; after 10            -> *10^2->*10  ->*10
