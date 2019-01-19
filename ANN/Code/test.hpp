@@ -51,8 +51,7 @@ private:
 	
 public:
 
-	void makeTest(unsigned inputAmount, vector<int> layers, unsigned noInstances, unsigned challangesNo){
-		std::vector<Data*> input;
+	void makeTest(std::vector<Data*> input, unsigned inputAmount, std::vector<int> layers, unsigned noInstances, unsigned challangesNo){
 		mlp network(inputAmount, layers);
 
 		default_random_engine rand_num{static_cast<long unsigned int>(chrono::high_resolution_clock::now().time_since_epoch().count())};
@@ -87,7 +86,8 @@ public:
 				properlyClassified+=1;
 		}
 
-		cout << "Properly classified: " << properlyClassified << " in "<< noInstances <<" examples. That is " << ((double)properlyClassified/noInstances)*100 << " percent." << endl;
+		cout << "Properly classified: " << properlyClassified << " in "<< noInstances;
+		cout <<" examples. That is " << ((double)properlyClassified/noInstances)*100 << " percent." << endl;
 	}
 	
 };
