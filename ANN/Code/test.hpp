@@ -1,6 +1,8 @@
 #include <string>
 #include <cstdlib>
 
+using namespace std;
+
 class Test{
 private:
 	
