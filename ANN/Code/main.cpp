@@ -1,5 +1,3 @@
-#include "mlp.hpp"
-#include "load.hpp"
 #include "test.hpp"
 
 int main(int argc, char* argv[])

@@ -4,6 +4,8 @@
 #include <random>
 #include <string>
 #include <cstdlib>
+#include "mlp.hpp"
+#include "load.hpp"
 
 using namespace std;
 
@@ -88,6 +90,6 @@ public:
 		cout << "Properly classified: " << properlyClassified << " in "<< noInstances <<" examples. That is " << ((double)properlyClassified/noInstances)*100 << " percent." << endl;
 	}
 	
-}
+};
 	
 	
