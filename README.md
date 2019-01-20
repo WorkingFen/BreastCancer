@@ -9,7 +9,7 @@ Zanim zaczniemy cokolwiek pobierać, to najpierw musimy cokolwiek zrobić.
 
 ### Kompilacja
 - Wywołanie **make**, bo mamy plik [makefile](https://github.com/WorkingFen/PSZTProject/blob/master/ANN/Code/makefile)
-- (na Windowsie w przypadku braku make) g++ -std=c++11 load.hpp data.hpp neuron.hpp mlp.hpp main.cpp -o ANNProject
+- (na Windowsie w przypadku braku make) g++ -std=c++11 test.hpp load.hpp data.hpp neuron.hpp mlp.hpp main.cpp -o ANNProject
  
 ## Technologie
 C++
