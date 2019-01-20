@@ -59,7 +59,7 @@ public:
 
 		int properlyClassified=0;
 
-		for(int i=0;i<challangesNo;i++)                           // uczenie sieci neuronowej na 2000 wybieranych losowo przykładach
+		for(int i=0;i<challangesNo;i++)                              // uczenie sieci neuronowej na 2000 wybieranych losowo przykładach
 		{
 			int chosenExample=dis(rand_num);
 
@@ -73,7 +73,7 @@ public:
 			network.processDataAndLearn();  
 		}
 
-		for(int i=0;i<noInstances;i++)                                                                                                                              // sprawdzanie jakości nauki
+		for(int i=0;i<noInstances;i++)                              // sprawdzanie jakości nauki
 		{
 			scale(&network, input, i);
 			
@@ -88,6 +88,38 @@ public:
 
 		cout << "Properly classified: " << properlyClassified << " in "<< noInstances;
 		cout <<" examples. That is " << ((double)properlyClassified/noInstances)*100 << " percent." << endl;
+	}
+	
+	void makeTest(std::vector<Data*> input, unsigned inputAmount, std::vector<int> layers, unsigned noInstances){
+		mlp network(inputAmount, layers);
+		unsigned challangesNo = round((noInstances*3)/4);
+
+		int properlyClassified=0;
+
+		for(int i=0;i<challangesNo;i++)                           // uczenie sieci neuronowej na 75% przykładów
+		{
+			scale(&network, input, i);
+			
+			if(input[i]->getDiagnosis()=='M')
+				network.setExpectedOutput(0, 1);
+			else
+				network.setExpectedOutput(0, 0);
+
+			network.processDataAndLearn();  
+		}
+
+		for(int i=challangesNo;i<noInstances;i++)                // sprawdzanie jakości nauki na pozostałych przykładach
+		{
+			scale(&network, input, i);
+			
+			network.processData();
+
+			if((input[i]->getDiagnosis()=='M' && network.getOutputVector()[0]>=0.5) || (input[i]->getDiagnosis()=='B' && network.getOutputVector()[0]<0.5))
+				properlyClassified+=1;
+		}
+
+		cout << "Properly classified: " << properlyClassified << " in "<< noInstances-challangesNo;
+		cout <<" examples. That is " << ((double)properlyClassified/(noInstances-challangesNo))*100 << " percent." << endl;
 	}
 	
 };
