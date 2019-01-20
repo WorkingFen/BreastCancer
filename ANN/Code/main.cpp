@@ -13,15 +13,45 @@ int main(int argc, char* argv[])
     }
     else input = load.read("../Data/wdbc.data");
 	
-	for(int i = 0; i < 50; i++){
-		test.makeTest(input, 30, {5, 1}, 285, 2000);
-	}
-	
-	std::cout << "Test 2" << std::endl << std::endl;
-	
+	std::cout << "Test 1: {5, 1}" << std::endl;
+	mlp network1(30, {5, 1});
 	for(int i = 0; i < 10; i++){
-		test.makeTest(input, 30, {5, 1}, 569);
+		test.makeTest(input, network1, load.getSize());
 	}
+	
+	std::cout << std::endl << "Test 2: {6, 3, 1}" << std::endl;
+	mlp network2(30, {6, 3, 1});
+	for(int i = 0; i < 10; i++){
+		test.makeTest(input, network2, load.getSize());
+	}
+	
+	std::cout << std::endl << "Test 3: {7, 3, 2, 1}" << std::endl;
+	mlp network3(30, {7, 3, 2, 1});
+	for(int i = 0; i < 10; i++){
+		test.makeTest(input, network3, load.getSize());
+	}
+	
+	std::cout << std::endl << "Test 4: {11, 1}" << std::endl;
+	mlp network4(30, {11, 1});
+	for(int i = 0; i < 10; i++){
+		test.makeTest(input, network4, load.getSize());
+	}
+	
+	std::cout << std::endl << "Test 5: {30, 1}" << std::endl;
+	mlp network5(30, {30, 1});
+	for(int i = 0; i < 10; i++){
+		test.makeTest(input, network5, load.getSize());
+	}
+	
+	std::cout << std::endl << "Test 6: {100, 1}" << std::endl;
+	mlp network6(30, {100, 1});
+	for(int i = 0; i < 10; i++){
+		test.makeTest(input, network6, load.getSize());
+	}
+	
+	/*for(int i = 0; i < 50; i++){
+		test.makeTest(input, 30, {5, 1}, 285, 2000);
+	}*/
 
     return 0;
 }

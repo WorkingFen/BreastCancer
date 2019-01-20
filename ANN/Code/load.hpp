@@ -8,6 +8,7 @@
 class Load{
 private:
 	std::ifstream loading;
+	unsigned size = 0;
 
 public:
 	std::vector<Data*> read(std::string file){
@@ -21,13 +22,13 @@ public:
 			char diagnosis;
 			std::vector<double> features(30);
 			while(loading >> line){
-				loading >> line;
 				data = split(line, ',');
 				id = atoi(data[0].c_str());
 				diagnosis = data[1][0];
 				for(int i = 0; i < 30; i++)
 					features[i] = std::stod(data[i+2]);
 				input.push_back(new Data(id, diagnosis, features));
+				this->size++;
 			}
 		}
 		else{
@@ -46,4 +47,6 @@ public:
 			tokens.push_back(token);
 		return tokens;
 	}
+	
+	unsigned getSize(){ return this->size; }
 };

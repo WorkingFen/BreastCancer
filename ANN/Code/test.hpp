@@ -90,9 +90,38 @@ public:
 		cout <<" examples. That is " << ((double)properlyClassified/noInstances)*100 << " percent." << endl;
 	}
 	
-	void makeTest(std::vector<Data*> input, unsigned inputAmount, std::vector<int> layers, unsigned noInstances){
-		mlp network(inputAmount, layers);
-		unsigned challangesNo = round((noInstances*3)/4);
+	void makeTest(std::vector<Data*> input, mlp network, unsigned noInstances){
+		unsigned challangesNo = floor((noInstances*3)/4);
+		unsigned verificationNo = noInstances - challangesNo;
+		
+		std::vector<Data*> verifyingInput;
+		std::vector<unsigned> verifyingNumbers;
+		
+		default_random_engine rand_num{static_cast<long unsigned int>(chrono::high_resolution_clock::now().time_since_epoch().count())};
+		uniform_real_distribution<> dis(0,noInstances-1);
+		
+		for(int i=0;i<verificationNo;){			
+			int example = dis(rand_num);
+			
+			bool repeat = false;
+
+			for(int j=0;j<verifyingNumbers.size();j++){
+				if(verifyingNumbers[j]==example){
+					repeat = true;
+					break;
+				}				
+			}
+			if(!repeat){
+				verifyingInput.push_back(input[example]);
+				verifyingNumbers.push_back(example);
+				i++;
+			}
+		}
+		
+		std::sort(verifyingNumbers.begin(), verifyingNumbers.end(), std::greater<int>());
+		
+		for(int i=0;i<verificationNo;i++)
+			input.erase(input.begin()+verifyingNumbers[i]);
 
 		int properlyClassified=0;
 
@@ -107,19 +136,26 @@ public:
 
 			network.processDataAndLearn();  
 		}
+		
+		unsigned mDis = 0;
+		unsigned bDis = 0;
 
-		for(int i=challangesNo;i<noInstances;i++)                // sprawdzanie jakości nauki na pozostałych przykładach
+		for(int i=0;i<verificationNo;i++)                // sprawdzanie jakości nauki na pozostałych przykładach
 		{
-			scale(&network, input, i);
+			scale(&network, verifyingInput, i);
 			
 			network.processData();
+			
+			if(verifyingInput[i]->getDiagnosis()=='M') mDis++;
+			else bDis++;
 
-			if((input[i]->getDiagnosis()=='M' && network.getOutputVector()[0]>=0.5) || (input[i]->getDiagnosis()=='B' && network.getOutputVector()[0]<0.5))
+			if((verifyingInput[i]->getDiagnosis()=='M' && network.getOutputVector()[0]>=0.5) || (verifyingInput[i]->getDiagnosis()=='B' && network.getOutputVector()[0]<0.5))
 				properlyClassified+=1;
 		}
-
-		cout << "Properly classified: " << properlyClassified << " in "<< noInstances-challangesNo;
-		cout <<" examples. That is " << ((double)properlyClassified/(noInstances-challangesNo))*100 << " percent." << endl;
+		
+		cout << "Distribution M:B -> " << mDis << ":" << bDis << "\t";
+		cout << "Properly classified: " << properlyClassified << " in "<< verificationNo;
+		cout <<" examples. That is " << ((double)properlyClassified/verificationNo)*100 << " percent." << endl;
 	}
 	
 };
