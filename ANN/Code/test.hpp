@@ -140,6 +140,11 @@ public:
 		unsigned mDis = 0;
 		unsigned bDis = 0;
 
+		int truePositive=0;
+		int trueNegative=0;
+		int falsePositive=0;
+		int falseNegative=0;
+
 		for(int i=0;i<verificationNo;i++)                // sprawdzanie jakości nauki na pozostałych przykładach
 		{
 			scale(&network, verifyingInput, i);
@@ -151,11 +156,21 @@ public:
 
 			if((verifyingInput[i]->getDiagnosis()=='M' && network.getOutputVector()[0]>=0.5) || (verifyingInput[i]->getDiagnosis()=='B' && network.getOutputVector()[0]<0.5))
 				properlyClassified+=1;
+
+			if(verifyingInput[i]->getDiagnosis()=='M' && network.getOutputVector()[0]>=0.5)
+				truePositive++;
+			else if(verifyingInput[i]->getDiagnosis()=='M')
+				falseNegative++;
+			else if(verifyingInput[i]->getDiagnosis()=='B' && network.getOutputVector()[0]<0.5)
+				trueNegative++;
+			else
+				falsePositive++;
 		}
 		
 		cout << "Distribution M:B -> " << mDis << ":" << bDis << "\t";
 		cout << "Properly classified: " << properlyClassified << " in "<< verificationNo;
 		cout <<" examples. That is " << ((double)properlyClassified/verificationNo)*100 << " percent." << endl;
+		cout << "TRUE POSITIVE: " << truePositive << " FALSE POSITIVE: " << falsePositive << " TRUE NEGATIVE: " << trueNegative << " FALSE NEGATIVE: " << falseNegative << endl;
 	}
 	
 };

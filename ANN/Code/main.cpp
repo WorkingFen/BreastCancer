@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
 	for(int i = 0; i < 10; i++){
 		test.makeTest(input, network6, load.getSize());
 	}
-	
+
 	/*for(int i = 0; i < 50; i++){
 		test.makeTest(input, 30, {5, 1}, 285, 2000);
 	}*/
