@@ -19,7 +19,10 @@ class neuron{
     {
         double x=0;
         for(int i=0;i<numberOfInputs;i++)
+        {
              x+=input[i]*weight[i];
+
+        }
 
         sumValue=x;
         return x;
@@ -79,6 +82,8 @@ class neuron{
         }
         
     }
+
+
 
     ~neuron(){};
 

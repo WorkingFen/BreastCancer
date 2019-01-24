@@ -1,5 +1,7 @@
 #include "test.hpp"
 
+
+
 int main(int argc, char* argv[])
 {
     Load load;
@@ -12,13 +14,12 @@ int main(int argc, char* argv[])
 	    input = load.read(file);
     }
     else input = load.read("../Data/wdbc.data");
-	
-	std::cout << "Test 1: {5, 1}" << std::endl;
-	mlp network1(30, {5, 1});
+
+	std::cout << "Test 1: {4, 1}" << std::endl;
+	mlp network1(30, {4, 1});
 	for(int i = 0; i < 10; i++){
 		test.makeTest(input, network1, load.getSize());
 	}
-	
 	std::cout << std::endl << "Test 2: {6, 3, 1}" << std::endl;
 	mlp network2(30, {6, 3, 1});
 	for(int i = 0; i < 10; i++){
@@ -48,10 +49,6 @@ int main(int argc, char* argv[])
 	for(int i = 0; i < 10; i++){
 		test.makeTest(input, network6, load.getSize());
 	}
-
-	/*for(int i = 0; i < 50; i++){
-		test.makeTest(input, 30, {5, 1}, 285, 2000);
-	}*/
 
     return 0;
 }

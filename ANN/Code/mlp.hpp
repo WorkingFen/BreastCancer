@@ -23,8 +23,7 @@ class mlp{
     /* wektor kolumnowy przechowujący wagi wejść neuronów wchodzących w skład sieci */
     vector<double> columnWeightVector;  
 
-    /* outputValue - wartość na wyjściu sieci (wyjście może być wektorem, 
-     * więc może istnieć konieczność wywołania tej metody dla każdego elementu wektora wyjść sieci)
+    /* outputValue - wartość na wyjściu sieci
      * expectedOutputValue - oczekiwana wartość wyjścia
      * inputNumber - numer wejścia neuronu (liczone od 0) 
      * */
@@ -39,10 +38,6 @@ class mlp{
      * layer - numer warstwy w której jesteśmy (k)
      * neuronNumber - numer neuronu z pierwszej warstwy 
      * input - wartość na danym wejściu neuronu, dla którego liczymy błędy
-     * 
-     * zapewne zrobimy macierz errors w klasie i nie będzie ona potrzebna tutaj w parametrach
-     * ale już taki layer raczej musi być przekazany w parametrze, chociaż mogę się mylić
-     * 
      * */
     double countInnerError(vector<double> errors, int layer, int neuronNumber, double input)
     {
@@ -69,10 +64,6 @@ class mlp{
     /* errors - wektor błędów z k+1-szej warstwy
      * neuronNumber - numer neuronu z pierwszej warstwy
      * input - wartość na danym wejściu neuronu, dla którego liczymy błędy
-     *
-     * zapewne zrobimy macierz errors w klasie i nie będzie ona potrzebna tutaj w parametrach
-     * ale już taki layer raczej musi być przekazany w parametrze, chociaż mogę się mylić 
-     *
      * */
     double countInputError(vector<double> errors, int neuronNumber, double input)
     {
@@ -106,7 +97,6 @@ class mlp{
         {
             vector<double> weight = neurons[layer][i].getWeightVector();        // tworzenie wektora kolumnowego wag                                                                     
             columnWeightVector.insert(end(columnWeightVector), begin(weight), --end(weight)); 
-	    // --end() bo chyba nie chcę wagi wejścia o wartości 1
 
             for(int j=0;j<layerInputs[layer];j++)
 
@@ -119,14 +109,12 @@ class mlp{
             {
                 vector<double> weight = neurons[z-1][i].getWeightVector();      // tworzenie wektora kolumnowego wag                                                                     
                 columnWeightVector.insert(end(columnWeightVector), begin(weight), --end(weight)); 
-		// --end() bo chyba nie chcę wagi wejścia o wartości 1
 
                 vector<double> errors;
 
                 for(int x=0;x<layerInputs[z+1];x++)                                  // przygotowanie wektora errors
                 {
                     errors.push_back(error[startingIndex+i+(x*layerInputs[z])]); 
-		    // x*layerInputs[z]->stride, startingIndex+i->offset
                 }
 
                 for(int j=0;j<layerInputs[z-1];j++) 
@@ -160,7 +148,6 @@ class mlp{
     {
         for(int i=0;i<networkOutput.size();i++)
         {
-            //cout << abs(networkOutput[i]-expectedNetworkOutput[i]) / expectedNetworkOutput[i] << endl;
             if(abs(networkOutput[i]-expectedNetworkOutput[i]) / expectedNetworkOutput[i] > epsilon)
                 return false;
         }
@@ -169,53 +156,27 @@ class mlp{
 
     public:
 
-    /*  Kozak debuggery  */
-    void print_weights()
-    {
-        cout<<"PRINT_WEIGHTS()"<<endl;
-        int layer=layerInputs.size()-1;
-        int j = 0;
-        for(int z=layer;z>0;z--)              
-        {
-            for(int i=0;i<layerInputs[z];i++)                                                                                                 
-            {
-                cout<<"warstwa : "<<z<<" / neuron: "<<i<<" / wejscia: ";
-	        cout<<neurons[z-1][i].getNumberOfInputs()<<" / wagi: ";
-                vector<double> wagi = neurons[z-1][i].getWeightVector();
-                j = 0;
-                
-                for (vector<double>::const_iterator w = wagi.begin(); w != --wagi.end(); ++w)
-                    {
-                        cout << *w<<" ";
-                        
-                        j++;
-                    }
-                cout<<endl;
-            }
-        }        
+    vector<double> getErrors(){
+        return error;
     }
+    vector<double> getWeightsColumnVector(){
+        return columnWeightVector;
+    }
+    int getNumberOfNetworkInputs(){
+        return layerInputs[0];
+    }
+    vector<int> getNumberOfNeurons(){
+        vector<int> temp;
 
-    void print_weights_column_vector()
-    {
-        cout<<"PRINT_WEIGHTS_COLUMN_VECTOR()"<<endl;
+        auto it = layerInputs.begin();
+        ++it;
 
-        for(vector<double>::const_iterator i = columnWeightVector.begin(); i != columnWeightVector.end(); ++i)
-        {
-            cout<<*i<<" ";
+        for(it; it < layerInputs.end(); ++it){
+            temp.push_back(*it);
         }
-        cout<<endl;
+        return temp;
     }
-
-    void print_errors()
-    {
-        cout<<"PRINT_ERRORS()"<<endl;
-        for(vector<double>::const_iterator i = error.begin(); i != error.end(); ++i)
-        {
-            cout<<*i<<" ";
-        }
-        cout<<endl;     
-    }
-
+    
 
     /* numberOfParameters - informacja o liczbie parametrów wejściowych 
      * layer - wektor przechwoujący informację o liczbie neuronów w każdej z powłok
@@ -242,8 +203,6 @@ class mlp{
         for(int i=0;i<layer.back();i++)
             neurons[j].push_back(neuron(0,layerInputs[j]));  // stworzenie neuronów (liniowych) warstwy wyjściowej
         
-        //vector<double> out (layer.back());
-        //expectedNetworkOutput=out;
         expectedNetworkOutput.resize(layer.back());          // domyślnie na wyjściu sieci jest wektor zer
         networkOutput.resize(layer.back());
     }
@@ -289,12 +248,10 @@ class mlp{
     /*  Metoda symulująca przepływ danych przez perceptron i naukę (przykład po przykładzie).  */
     void processDataAndLearn()
     {
-        //print_weights();cout<<endl;
         double i=10;
 
         while(!precisionReached(0.0001) && i<50)
         {
-            //print_weights();cout<<endl;
             processData();
             propagateBackwards();
             sochasticDescent(1/i);
@@ -314,20 +271,18 @@ class mlp{
 
             error.clear();                                                 // wyczyszczenie buforów
             columnWeightVector.clear();
-
-            //if(fmod(i,3)==0)
-             //   i+=2;
-
             i+=0.5;
         }
-        
-        //print_weights();cout<<endl;
     }
 
     /*  Zwraca wektor wyjść danej sieci neuronowej.  */
     vector<double> getOutputVector()
     {
         return networkOutput;
+    }
+
+    vector<vector<neuron>> getNeurons(){
+        return neurons;
     }
 
     friend ostream &operator<<( ostream &output, const mlp &network )

@@ -78,9 +78,6 @@ public:
 			scale(&network, input, i);
 			
 			network.processData();
-			//cout << input[i]->getDiagnosis() << " ";
-			//cout << network.getOutputVector()[0];
-			//cout << endl;
 
 			if((input[i]->getDiagnosis()=='M' && network.getOutputVector()[0]>=0.5) || (input[i]->getDiagnosis()=='B' && network.getOutputVector()[0]<0.5))
 				properlyClassified+=1;
@@ -172,6 +169,78 @@ public:
 		cout <<" examples. That is " << ((double)properlyClassified/verificationNo)*100 << " percent." << endl;
 		cout << "TRUE POSITIVE: " << truePositive << " FALSE POSITIVE: " << falsePositive << " TRUE NEGATIVE: " << trueNegative << " FALSE NEGATIVE: " << falseNegative << endl;
 	}
+
+
+
+/* funkcja sprawdzająca czy struktura sieci została poprawnie przypisana */
+int testStructure(int inputsN, std::vector<int> neurons){
+	mlp network(inputsN,neurons);
+
+	int networkInputs = network.getNumberOfNetworkInputs();
+	std::vector<int> n = network.getNumberOfNeurons();
+
+	if (inputsN != networkInputs){ 		// sprawdzenie liczby wejść
+		return -1;
+	}
+	if (neurons.size() != n.size()) return -2;   // sprawdzenie liczby warstw
+
+	auto it = neurons.begin();
+	auto it2 = n.begin();
+	for(it; it != neurons.end(); ++it){ 	// sprawdzenie liczby neuronów w każdej warstwie
+
+		if(*it != *it2) return -3;	
+
+		++it2;
+	}
+
+	return 1;
+}
+
+/* funkcja sprawdzająca, czy wejścia 1. warstwy zostają poprawnie przypisane do sieci */
+int testInputs(int inputsN, std::vector<int> neuronsN, std::vector<double> inputs){
+	mlp network(inputsN, neuronsN);
+
+	int i = 0;
+	for(auto it = inputs.begin(); it != inputs.end(); ++it){
+		network.setInput(i, *it);
+		++i;
+	} 
+
+	std::vector<std::vector<neuron>> neurons = network.getNeurons();
+
+	auto layer = neurons.begin();
+	for(auto n = (*layer).begin(); n != (*layer).end(); ++n){     // dla każdego neuronu w 1. warswie
+
+		if(inputs.size() != (*n).getNumberOfInputs()) return -2;
+
+		for(int j = 0; j < inputs.size(); j++){					   // dla każdego wejścia neuronu
+			if((*n).getInput(j) != inputs[j]){
+				return -1;
+			}
+		}
+	}
+	return 1;
+}
+
+/*  funkcja sprawdzająca, czy wyjście neuronu jest prawidłowo obliczane */
+int testNeuronF(){
+	neuron n(1, 3);
+
+	n.setInput(0,1.5);
+	n.setInput(1,0.5);
+	n.setInput(2,0.3);
+
+	n.setWeight(0,0.1);
+	n.setWeight(1,0.2);
+	n.setWeight(2,0.13);
+	n.setWeight(3,0.13);
+
+	double out = n.getNewOutput();
+	if(out < 0.61 && out > 0.6 ) return 1;
+	return -1;
+}
+
+
 	
 };
 	
