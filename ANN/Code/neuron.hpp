@@ -21,9 +21,7 @@ class neuron{
         for(int i=0;i<numberOfInputs;i++)
         {
              x+=input[i]*weight[i];
-
         }
-
         sumValue=x;
         return x;
     }
@@ -80,11 +78,7 @@ class neuron{
             for(int i=0;i<this->numberOfInputs;i++)
                 weight[i]=0.000000000000001;
         }
-        
     }
-
-
-
     ~neuron(){};
 
     /*  Zwraca liczbę "edytowalnych" wejść -> ostatnie wejście ma wartość 1.  */

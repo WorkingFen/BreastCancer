@@ -192,7 +192,6 @@ int testStructure(int inputsN, std::vector<int> neurons){
 
 		++it2;
 	}
-
 	return 1;
 }
 
@@ -238,10 +237,7 @@ int testNeuronF(){
 	double out = n.getNewOutput();
 	if(out < 0.61 && out > 0.6 ) return 1;
 	return -1;
-}
-
-
-	
+	}
 };
 	
 	
