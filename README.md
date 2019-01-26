@@ -5,7 +5,6 @@ Napisać pakiet umożliwiający trenowanie perceptronów wielowarstwowych przy u
 [Dane](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic))
 
 ## Pierwsze kroki
-Zanim zaczniemy cokolwiek pobierać, to najpierw musimy cokolwiek zrobić.
 
 ### Kompilacja
 - Wywołanie **make**, bo mamy plik [makefile](https://github.com/WorkingFen/PSZTProject/blob/master/ANN/Code/makefile)
