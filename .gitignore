@@ -39,3 +39,4 @@
 *.layout
 *.depend
 ANNProject
+.vs
